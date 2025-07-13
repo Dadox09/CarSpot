@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Colore del bordo quando l'input è attivo/focalizzato -->
+    <item android:color="@android:color/white" android:state_focused="true"/>
+    <!-- Colore del bordo quando l'utente passa il mouse sopra (per dispositivi che lo supportano) -->
+    <item android:color="#B0BEC5" android:state_hovered="true"/>
+    <!-- Colore del bordo in stato normale (non focalizzato) -->
+    <item android:color="#B0BEC5"/>
+</selector>

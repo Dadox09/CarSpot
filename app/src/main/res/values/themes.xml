@@ -1,0 +1,75 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ConcessionarioApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:navigationBarColor">#CC333333</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        
+        <!-- Customize your theme here. -->
+        <item name="colorError">@color/red_500</item>
+    </style>
+
+    <style name="Theme.ConcessionarioApp" parent="Base.Theme.ConcessionarioApp" />
+    
+    <style name="Theme.ConcessionarioApp.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Stile per la schermata di login di FirebaseUI -->
+    <style name="FirebaseUI" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Colori principali, usati per i pulsanti -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Sfondo della schermata -->
+        <item name="android:windowBackground">@drawable/welcome_gradient_bg</item>
+
+        <!-- Colori del testo -->
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorHint">#99FFFFFF</item> 
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">#B0BEC5</item>
+
+        <!-- Colore della barra di stato -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        
+        <!-- Applica lo stile personalizzato ai campi di input -->
+        <item name="textInputStyle">@style/FirebaseUI.TextInputLayout</item>
+
+        <!-- Padding per il contenuto principale -->
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <!-- Stile specifico per i campi di input di FirebaseUI -->
+    <style name="FirebaseUI.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/text_input_box_stroke</item>
+        <item name="hintTextColor">@color/white</item>
+    </style>
+
+    <style name="Widget.App.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomAppBar</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomAppBar" parent="">
+        <item name="colorOnSurface">@color/white</item>
+    </style>
+
+</resources>

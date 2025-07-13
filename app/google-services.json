@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "264383367240",
+    "project_id": "concessionarioapp-ba5e6",
+    "storage_bucket": "concessionarioapp-ba5e6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:264383367240:android:ed81b2467fb08155c9307d",
+        "android_client_info": {
+          "package_name": "com.example.concessionarioapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "264383367240-lj4da08rmhi8gdesg56ikjcm9ms8rvnp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.concessionarioapp",
+            "certificate_hash": "d1299511ba178ea310a7fb4e2ef19b1b5e61fe6f"
+          }
+        },
+        {
+          "client_id": "264383367240-s9c71f388fdr1mshsig5mg54nl17b9f8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBD0kg5zCTLMLPGxqoGrHnHfHEooa739-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "264383367240-s9c71f388fdr1mshsig5mg54nl17b9f8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
