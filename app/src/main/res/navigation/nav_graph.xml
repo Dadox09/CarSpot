@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/compraFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/compraFragment"
@@ -23,6 +23,9 @@
                 android:name="annuncioId"
                 app:argType="string" />
         </action>
+        <action
+            android:id="@+id/action_compraFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     
     <fragment
@@ -39,6 +42,12 @@
         <action
             android:id="@+id/action_vendiFragment_to_profiloFragment"
             app:destination="@id/profiloFragment" />
+        <action
+            android:id="@+id/action_vendiFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_vendiFragment_to_dettaglioAnnuncioFragment"
+            app:destination="@id/dettaglioAnnuncioFragment" />
     </fragment>
     
     <fragment
@@ -55,6 +64,9 @@
         <action
             android:id="@+id/action_creaAnnuncioFragment_to_profiloFragment"
             app:destination="@id/profiloFragment" />
+        <action
+            android:id="@+id/action_creaAnnuncioFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     
     <fragment
@@ -68,6 +80,9 @@
         <action
             android:id="@+id/action_profiloFragment_to_vendiFragment"
             app:destination="@id/vendiFragment" />
+        <action
+            android:id="@+id/action_profiloFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/dettaglioAnnuncioFragment"
@@ -86,5 +101,30 @@
         <action
             android:id="@+id/action_dettaglioAnnuncioFragment_to_vendiFragment"
             app:destination="@id/vendiFragment" />
+        <action
+            android:id="@+id/action_dettaglioAnnuncioFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.concessionarioapp.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_compraFragment"
+            app:destination="@id/compraFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_vendiFragment"
+            app:destination="@id/vendiFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profiloFragment"
+            app:destination="@id/profiloFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_dettaglioAnnuncioFragment"
+            app:destination="@id/dettaglioAnnuncioFragment">
+            <argument
+                android:name="annuncioId"
+                app:argType="string" />
+        </action>
     </fragment>
 </navigation>

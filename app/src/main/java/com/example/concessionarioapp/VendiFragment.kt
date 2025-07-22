@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.concessionarioapp.databinding.FragmentVendiBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -43,9 +44,20 @@ class VendiFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        annunciAdapter = AnnuncioAdapter(mutableListOf()) { annuncio ->
-            // non succede nulla
-        }
+        annunciAdapter = AnnuncioAdapter(mutableListOf(), 
+            onAnnuncioClick = { annuncio ->
+                val navController = findNavController()
+                if (navController.currentDestination?.id == R.id.vendiFragment) {
+                    val bundle = Bundle()
+                    bundle.putString("annuncioId", annuncio.id)
+                    navController.navigate(R.id.action_vendiFragment_to_dettaglioAnnuncioFragment, bundle)
+                }
+            },
+            onLikeClick = { annuncio ->
+                viewModel.toggleLike(annuncio)
+            },
+            showLikes = false
+        )
         binding.recyclerViewAnnunciVendi.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = annunciAdapter
@@ -61,7 +73,7 @@ class VendiFragment : Fragment() {
                 
                 fullAnnunciList.clear()
                 fullAnnunciList.addAll(annunci)
-                annunciAdapter.updateList(fullAnnunciList)
+                annunciAdapter.updateAnnunci(fullAnnunciList)
                 binding.searchViewVendi.setQuery("", false)
             }
             else{
@@ -98,7 +110,7 @@ class VendiFragment : Fragment() {
                 it.titolo.lowercase().contains(searchQuery) || it.descrizione.lowercase().contains(searchQuery)
             }
         }
-        annunciAdapter.updateList(filteredList)
+        annunciAdapter.updateAnnunci(filteredList)
     }
 
     override fun onDestroyView() {

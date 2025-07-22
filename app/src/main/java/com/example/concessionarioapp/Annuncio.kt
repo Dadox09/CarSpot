@@ -15,5 +15,7 @@ data class Annuncio(
     val cambio: String = "",
     val userId: String = "",
     @ServerTimestamp
-    val dataCreazione: Date? = null
+    val dataCreazione: Date? = null,
+    val likes: Int = 0,
+    val likedBy: MutableList<String> = mutableListOf()
 )

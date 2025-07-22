@@ -1,4 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Splash screen theme. -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/colorPrimary</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.ConcessionarioApp</item>
+    </style>
+    
     <!-- Base application theme. -->
     <style name="Base.Theme.ConcessionarioApp" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
@@ -40,19 +47,28 @@
 
         <!-- Colori del testo -->
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textColorHint">#99FFFFFF</item> 
+        <item name="android:textColorHint">#99FFFFFF</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">#B0BEC5</item>
 
         <!-- Colore della barra di stato -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        
+
         <!-- Applica lo stile personalizzato ai campi di input -->
         <item name="textInputStyle">@style/FirebaseUI.TextInputLayout</item>
 
-        <!-- Padding per il contenuto principale -->
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
+        <item name="materialButtonStyle">@style/FirebaseUI.Button</item>
+
+    </style>
+
+    <style name="FirebaseUI.Button" parent="Widget.Material3.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginStart">32dp</item>
+        <item name="android:layout_marginEnd">32dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
     </style>
 
     <!-- Stile specifico per i campi di input di FirebaseUI -->

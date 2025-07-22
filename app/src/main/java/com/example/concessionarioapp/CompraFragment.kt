@@ -40,15 +40,19 @@ class CompraFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        annunciAdapter = AnnuncioAdapter(mutableListOf()) { annuncio ->
-            // Quando l'utente clicca su un annuncio, naviga verso il fragment di dettaglio
-            val navController = findNavController()
-            if (navController.currentDestination?.id == R.id.compraFragment) {
-                val bundle = Bundle()
-                bundle.putString("annuncioId", annuncio.id)
-                navController.navigate(R.id.action_compraFragment_to_dettaglioAnnuncioFragment, bundle)
+        annunciAdapter = AnnuncioAdapter(mutableListOf(),
+            onAnnuncioClick = { annuncio ->
+                val navController = findNavController()
+                if (navController.currentDestination?.id == R.id.compraFragment) {
+                    val bundle = Bundle()
+                    bundle.putString("annuncioId", annuncio.id)
+                    navController.navigate(R.id.action_compraFragment_to_dettaglioAnnuncioFragment, bundle)
+                }
+            },
+            onLikeClick = { annuncio ->
+               viewModel.toggleLike(annuncio)
             }
-        }
+        )
         binding.recyclerViewAnnunci.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = annunciAdapter
@@ -60,7 +64,7 @@ class CompraFragment : Fragment() {
             if (annunci.isNotEmpty()) {
                 fullAnnunciList.clear()
                 fullAnnunciList.addAll(annunci)
-                annunciAdapter.updateList(fullAnnunciList)
+                annunciAdapter.updateAnnunci(fullAnnunciList)
                 // Resetta la ricerca per mostrare tutti i risultati quando i dati cambiano
                 binding.searchViewCompra.setQuery("", false)
             }else{
@@ -97,7 +101,7 @@ class CompraFragment : Fragment() {
                 it.titolo.lowercase().contains(searchQuery) || it.descrizione.lowercase().contains(searchQuery)
             }
         }
-        annunciAdapter.updateList(filteredList)
+        annunciAdapter.updateAnnunci(filteredList)
     }
 
     override fun onDestroyView() {

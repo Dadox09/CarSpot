@@ -50,9 +50,13 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.common.ktx)
+    implementation(libs.firebase.messaging.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation("com.google.firebase:firebase-messaging")
+
 
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx")
@@ -70,4 +74,7 @@ dependencies {
     //recycler
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.recyclerview.selection)
+    
+    // Splash Screen API
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }
