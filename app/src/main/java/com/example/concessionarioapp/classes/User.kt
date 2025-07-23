@@ -1,5 +1,4 @@
-package com.example.concessionarioapp
-
+package com.example.concessionarioapp.classes
 
 data class User(
     val id: String = "",

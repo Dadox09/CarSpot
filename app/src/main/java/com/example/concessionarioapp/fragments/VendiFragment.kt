@@ -1,4 +1,4 @@
-package com.example.concessionarioapp
+package com.example.concessionarioapp.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.concessionarioapp.classes.Annuncio
+import com.example.concessionarioapp.adapters.AnnuncioAdapter
+import com.example.concessionarioapp.R
 import com.example.concessionarioapp.databinding.FragmentVendiBinding
+import com.example.concessionarioapp.viewmodels.AnnunciViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class VendiFragment : Fragment() {
@@ -44,13 +48,17 @@ class VendiFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        annunciAdapter = AnnuncioAdapter(mutableListOf(), 
+        annunciAdapter = AnnuncioAdapter(
+            mutableListOf(),
             onAnnuncioClick = { annuncio ->
                 val navController = findNavController()
                 if (navController.currentDestination?.id == R.id.vendiFragment) {
                     val bundle = Bundle()
                     bundle.putString("annuncioId", annuncio.id)
-                    navController.navigate(R.id.action_vendiFragment_to_dettaglioAnnuncioFragment, bundle)
+                    navController.navigate(
+                        R.id.action_vendiFragment_to_dettaglioAnnuncioFragment,
+                        bundle
+                    )
                 }
             },
             onLikeClick = { annuncio ->
@@ -70,7 +78,7 @@ class VendiFragment : Fragment() {
                 // Mostra la lista degli annunci
                 binding.recyclerViewAnnunciVendi.visibility = View.VISIBLE
                 binding.messageTextView.visibility = View.GONE
-                
+
                 fullAnnunciList.clear()
                 fullAnnunciList.addAll(annunci)
                 annunciAdapter.updateAnnunci(fullAnnunciList)

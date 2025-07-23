@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/welcome_gradient_bg"
-    tools:context=".ProfiloFragment">
+    tools:context=".fragments.ProfiloFragment">
 
     <TextView
         android:id="@+id/textView_title_profilo"

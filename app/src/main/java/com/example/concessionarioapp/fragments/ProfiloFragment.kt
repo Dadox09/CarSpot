@@ -1,14 +1,15 @@
-package com.example.concessionarioapp
+package com.example.concessionarioapp.fragments
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.concessionarioapp.WelcomeActivity
 import com.example.concessionarioapp.databinding.FragmentProfiloBinding
+import com.example.concessionarioapp.viewmodels.ProfiloViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class ProfiloFragment : Fragment() {
@@ -31,47 +32,47 @@ class ProfiloFragment : Fragment() {
 
         // Inizializza il ViewModel
         viewModel = ViewModelProvider(this)[ProfiloViewModel::class.java]
-        
+
         // Osserva i dati LiveData
         setupObservers()
 
         // Configura i listener
         setupListeners()
     }
-    
+
     private fun setupObservers() {
         // Osserva il nome utente
         viewModel.userName.observe(viewLifecycleOwner) { userName ->
             binding.textViewUsername.text = userName
         }
-        
+
         // Osserva l'email dell'utente
         viewModel.userEmail.observe(viewLifecycleOwner) { email ->
             binding.textViewEmail.text = email
         }
-        
+
         // Osserva il numero di annunci attivi
         viewModel.annunciAttivi.observe(viewLifecycleOwner) { count ->
             binding.textViewAnnunciAttivi.text = count
         }
-        
+
         // Osserva la data di registrazione
         viewModel.dataRegistrazione.observe(viewLifecycleOwner) { date ->
             binding.textViewDataRegistrazione.text = date
         }
-        
+
         // Osserva lo stato di caricamento
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             // Qui puoi mostrare/nascondere un indicatore di caricamento se necessario
         }
-        
+
         // Osserva messaggi di errore
         viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
                 Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
             }
         }
-        
+
         // Osserva lo stato dell'utente corrente
         viewModel.currentUser.observe(viewLifecycleOwner) { user ->
             if (user == null) {
@@ -82,7 +83,7 @@ class ProfiloFragment : Fragment() {
             }
         }
     }
-    
+
     private fun setupListeners() {
         // Configura il pulsante di logout
         binding.buttonLogout.setOnClickListener {
@@ -92,7 +93,7 @@ class ProfiloFragment : Fragment() {
             startActivity(intent)
         }
     }
-    
+
 
     override fun onDestroyView() {
         super.onDestroyView()

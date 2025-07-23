@@ -1,16 +1,19 @@
-package com.example.concessionarioapp
+package com.example.concessionarioapp.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.concessionarioapp.classes.Annuncio
+import com.example.concessionarioapp.adapters.AnnuncioAdapter
+import com.example.concessionarioapp.R
 import com.example.concessionarioapp.databinding.FragmentCompraBinding
+import com.example.concessionarioapp.viewmodels.AnnunciViewModel
 
 class CompraFragment : Fragment() {
 
@@ -40,20 +43,26 @@ class CompraFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        annunciAdapter = AnnuncioAdapter(mutableListOf(),
+        annunciAdapter = AnnuncioAdapter(
+            mutableListOf(),
+            //se clicco su un annuncio mi reindirizza alla schermata di dettaglio
             onAnnuncioClick = { annuncio ->
                 val navController = findNavController()
                 if (navController.currentDestination?.id == R.id.compraFragment) {
                     val bundle = Bundle()
                     bundle.putString("annuncioId", annuncio.id)
-                    navController.navigate(R.id.action_compraFragment_to_dettaglioAnnuncioFragment, bundle)
+                    navController.navigate(
+                        R.id.action_compraFragment_to_dettaglioAnnuncioFragment,
+                        bundle
+                    )
                 }
             },
             onLikeClick = { annuncio ->
-               viewModel.toggleLike(annuncio)
+                viewModel.toggleLike(annuncio)
             }
         )
         binding.recyclerViewAnnunci.apply {
+            //imposto un layout orientato verticalmente
             layoutManager = LinearLayoutManager(context)
             adapter = annunciAdapter
         }

@@ -1,14 +1,17 @@
-package com.example.concessionarioapp
+package com.example.concessionarioapp.fragments
 
+import android.R
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.concessionarioapp.classes.Annuncio
+import com.example.concessionarioapp.NotificationService
 import com.example.concessionarioapp.databinding.FragmentCreaAnnuncioBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -45,20 +48,23 @@ class CreaAnnuncioFragment : Fragment() {
     }
 
     private fun setupScelte() {
-        // Configura il dropdown per il tipo di carburante
+        //dropdown per il tipo di carburante
         val tipiCarburante = arrayOf("Benzina", "Diesel", "GPL", "Metano", "Elettrico", "Ibrido")
-        val carburanteAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, tipiCarburante)
+        val carburanteAdapter =
+            ArrayAdapter(requireContext(), R.layout.simple_dropdown_item_1line, tipiCarburante)
         binding.carburanteAutoComplete.setAdapter(carburanteAdapter)
-        binding.carburanteAutoComplete.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+        binding.carburanteAutoComplete.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
 
-        // Configura il dropdown per il tipo di cambio
+        //dropdown per il tipo di cambio
         val tipiCambio = arrayOf("Manuale", "Automatico", "Semiautomatico")
-        val cambioAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, tipiCambio)
+        val cambioAdapter =
+            ArrayAdapter(requireContext(), R.layout.simple_dropdown_item_1line, tipiCambio)
         binding.cambioAutoComplete.setAdapter(cambioAdapter)
-        binding.cambioAutoComplete.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+        binding.cambioAutoComplete.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
     }
 
     private fun salvaAnnuncio() {
+        // Valori inseriti dall'utente
         val titolo = binding.titoloEditText.text.toString().trim()
         val descrizione = binding.descrizioneEditText.text.toString().trim()
         val prezzoText = binding.prezzoEditText.text.toString().trim()
@@ -70,7 +76,7 @@ class CreaAnnuncioFragment : Fragment() {
         val userId = auth.currentUser?.uid
 
         // Verifica che i campi obbligatori siano compilati
-        if (titolo.isEmpty() || descrizione.isEmpty() || prezzoText.isEmpty() || annoText.isEmpty() || 
+        if (titolo.isEmpty() || descrizione.isEmpty() || prezzoText.isEmpty() || annoText.isEmpty() ||
             cilindrataText.isEmpty() || chilometraggioText.isEmpty() || carburante.isEmpty() || cambio.isEmpty()) {
             Toast.makeText(requireContext(), "Per favore, compila tutti i campi", Toast.LENGTH_SHORT).show()
             return
@@ -85,7 +91,7 @@ class CreaAnnuncioFragment : Fragment() {
         val prezzo = prezzoText.toDoubleOrNull()
         if (prezzo == null || prezzo <= 0) {
             binding.prezzoInputLayout.error = "Inserisci un prezzo valido"
-            binding.prezzoInputLayout.setErrorTextColor(ContextCompat.getColorStateList(requireContext(), android.R.color.white))
+            binding.prezzoInputLayout.setErrorTextColor(ContextCompat.getColorStateList(requireContext(), R.color.white))
             return
         } else {
             binding.prezzoInputLayout.error = null
@@ -94,7 +100,7 @@ class CreaAnnuncioFragment : Fragment() {
         val anno = annoText.toIntOrNull()
         if (anno == null || anno < 1900 || anno > 2100) {
             binding.annoInputLayout.error = "Inserisci un anno valido"
-            binding.annoInputLayout.setErrorTextColor(ContextCompat.getColorStateList(requireContext(), android.R.color.white))
+            binding.annoInputLayout.setErrorTextColor(ContextCompat.getColorStateList(requireContext(), R.color.white))
             return
         } else {
             binding.annoInputLayout.error = null
@@ -103,7 +109,7 @@ class CreaAnnuncioFragment : Fragment() {
         val cilindrata = cilindrataText.toIntOrNull()
         if (cilindrata == null || cilindrata <= 0) {
             binding.cilindrataInputLayout.error = "Inserisci una cilindrata valida"
-            binding.cilindrataInputLayout.setErrorTextColor(ContextCompat.getColorStateList(requireContext(), android.R.color.white))
+            binding.cilindrataInputLayout.setErrorTextColor(ContextCompat.getColorStateList(requireContext(), R.color.white))
             return
         } else {
             binding.cilindrataInputLayout.error = null
@@ -112,16 +118,16 @@ class CreaAnnuncioFragment : Fragment() {
         val chilometraggio = chilometraggioText.toIntOrNull()
         if (chilometraggio == null || chilometraggio < 0) {
             binding.chilometraggioInputLayout.error = "Inserisci un chilometraggio valido"
-            binding.chilometraggioInputLayout.setErrorTextColor(ContextCompat.getColorStateList(requireContext(), android.R.color.white))
+            binding.chilometraggioInputLayout.setErrorTextColor(ContextCompat.getColorStateList(requireContext(), R.color.white))
             return
         } else {
             binding.chilometraggioInputLayout.error = null
         }
 
-        // Disabilita il pulsante per evitare doppi click
+        // Bottone non abilitato per evitare doppi click
         binding.salvaButton.isEnabled = false
 
-        // Crea un nuovo documento nella collezione "annunci"
+        //Creo varaibile per salvare su firebas
         val nuovoAnnuncioRef = firestore.collection("annunci").document()
 
         val annuncio = Annuncio(
@@ -140,7 +146,15 @@ class CreaAnnuncioFragment : Fragment() {
         nuovoAnnuncioRef.set(annuncio)
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Annuncio salvato con successo!", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_creaAnnuncioFragment_to_vendiFragment)
+
+                // Invia una notifica a tutti gli utenti per il nuovo annuncio
+                NotificationService.Companion.sendNotificationToAll(
+                    requireContext(),
+                    "Nuovo annuncio disponibile",
+                    "${annuncio.titolo} - ${annuncio.anno} - ${annuncio.prezzo}€"
+                )
+
+                findNavController().navigate(com.example.concessionarioapp.R.id.action_creaAnnuncioFragment_to_vendiFragment)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Errore nel salvataggio: ${e.message}", Toast.LENGTH_LONG).show()

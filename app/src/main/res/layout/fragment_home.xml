@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@drawable/welcome_gradient_bg"
-    tools:context=".HomeFragment">
+    tools:context=".fragments.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -30,11 +30,11 @@
             android:id="@+id/welcomeTitleTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="80dp"
             android:gravity="center"
-            android:text="L'app perfetta per te"
+            android:text="Compra veloce, vendi facile."
             android:textColor="@android:color/white"
             android:textSize="28sp"
             android:textStyle="bold"
@@ -51,7 +51,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:gravity="center"
-            android:text="Compra veloce, vendi facile. La tua auto ideale è a un tap di distanza."
+            android:text="La tua auto ideale è a un tap di distanza."
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="italic"

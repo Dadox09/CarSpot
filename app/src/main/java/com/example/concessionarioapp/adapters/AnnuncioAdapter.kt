@@ -1,4 +1,4 @@
-package com.example.concessionarioapp
+package com.example.concessionarioapp.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,11 +7,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.concessionarioapp.classes.Annuncio
+import com.example.concessionarioapp.R
+import com.google.firebase.auth.FirebaseAuth
 
-class AnnuncioAdapter(private var annunci: MutableList<Annuncio>, 
-private val onAnnuncioClick: (Annuncio) -> Unit,
-private val onLikeClick: (Annuncio) -> Unit,
-private val showLikes: Boolean = true) : RecyclerView.Adapter<AnnuncioAdapter.AnnuncioViewHolder>() {
+class AnnuncioAdapter(private var annunci: MutableList<Annuncio>,
+                      private val onAnnuncioClick: (Annuncio) -> Unit,
+                      private val onLikeClick: (Annuncio) -> Unit,
+                      private val showLikes: Boolean = true) : RecyclerView.Adapter<AnnuncioAdapter.AnnuncioViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnnuncioViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_annuncio, parent, false)
@@ -28,7 +32,7 @@ private val showLikes: Boolean = true) : RecyclerView.Adapter<AnnuncioAdapter.An
     }
 
     override fun getItemCount(): Int = annunci.size
-    
+
     // Metodo semplice per aggiornare la lista di annunci
     fun updateAnnunci(newAnnunci: List<Annuncio>) {
         annunci.clear()
@@ -37,6 +41,7 @@ private val showLikes: Boolean = true) : RecyclerView.Adapter<AnnuncioAdapter.An
     }
 
     inner class AnnuncioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        //salvo tutto il layout cosi da modificarlo
         private val titoloTextView: TextView = itemView.findViewById(R.id.titoloAnnuncioTextView)
         private val descrizioneTextView: TextView = itemView.findViewById(R.id.descrizioneAnnuncioTextView)
         private val prezzoTextView: TextView = itemView.findViewById(R.id.prezzoAnnuncioTextView)
@@ -44,8 +49,10 @@ private val showLikes: Boolean = true) : RecyclerView.Adapter<AnnuncioAdapter.An
         private val likesCountTextView: TextView = itemView.findViewById(R.id.likesCountTextView)
         private val likeIconImageView: ImageView = itemView.findViewById(R.id.likeIconImageView)
         private val likesContainer: LinearLayout = itemView.findViewById(R.id.likesContainer)
+        private val annuncioImageView: ImageView = itemView.findViewById(R.id.immagineAnnuncioImageView)
 
         fun bind(annuncio: Annuncio) {
+            //popolo il layout con i dati dell'annuncio
             titoloTextView.text = annuncio.titolo
             descrizioneTextView.text = annuncio.descrizione
             prezzoTextView.text = String.format("€ %.2f", annuncio.prezzo)
@@ -53,6 +60,7 @@ private val showLikes: Boolean = true) : RecyclerView.Adapter<AnnuncioAdapter.An
             val dettagli = "${annuncio.anno} • ${annuncio.carburante} • ${annuncio.chilometraggio} km"
             dettagliTextView.text = dettagli
 
+            // Mostra o nascondi il contatore di like in base al fragment dove sono
             if (showLikes) {
                 likesContainer.visibility = View.VISIBLE
                 updateLikesDisplay(annuncio)
@@ -63,8 +71,21 @@ private val showLikes: Boolean = true) : RecyclerView.Adapter<AnnuncioAdapter.An
             } else {
                 likesContainer.visibility = View.GONE
             }
+
+            if (!annuncio.imageUrl.isNullOrEmpty()) {
+                Glide.with(itemView.context)
+                    .load(annuncio.imageUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder) // Immagine mostrata in caso di errore
+                    .into(annuncioImageView)
+            } else {
+                // Se l'URL è nullo o vuoto, mostra il placeholder
+                annuncioImageView.setImageResource(R.drawable.placeholder)
+            }
+
         }
-        
+
+        // Metodo per aggiornare la visualizzazione del contatore di like
         private fun updateLikesDisplay(annuncio: Annuncio) {
             likesCountTextView.text = annuncio.likes.toString()
 
@@ -75,12 +96,10 @@ private val showLikes: Boolean = true) : RecyclerView.Adapter<AnnuncioAdapter.An
                 if (hasLiked) R.drawable.ic_heart_filled else R.drawable.ic_heart_empty
             )
         }
-        
+
         private fun getCurrentUserId(): String {
             // Ottieni l'ID dell'utente corrente da Firebase Auth
-            return com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
+            return FirebaseAuth.getInstance().currentUser?.uid ?: ""
         }
     }
 }
-
-

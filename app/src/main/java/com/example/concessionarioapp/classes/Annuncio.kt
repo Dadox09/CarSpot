@@ -1,4 +1,4 @@
-package com.example.concessionarioapp
+package com.example.concessionarioapp.classes
 
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
@@ -17,5 +17,6 @@ data class Annuncio(
     @ServerTimestamp
     val dataCreazione: Date? = null,
     val likes: Int = 0,
-    val likedBy: MutableList<String> = mutableListOf()
+    val likedBy: MutableList<String> = mutableListOf(),
+    val imageUrl: String = ""
 )

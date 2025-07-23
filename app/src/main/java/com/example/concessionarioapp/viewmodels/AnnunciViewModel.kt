@@ -1,17 +1,17 @@
-package com.example.concessionarioapp
+package com.example.concessionarioapp.viewmodels
 
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.concessionarioapp.classes.Annuncio
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.SetOptions
 
 class AnnunciViewModel : ViewModel() {
 
+    //connetto a firestore
     private val db = FirebaseFirestore.getInstance()
 
     // LiveData per la lista di annunci
@@ -25,16 +25,16 @@ class AnnunciViewModel : ViewModel() {
     fun caricaAnnunci(userId: String? = null) {
         var query: Query = db.collection("annunci")
 
-        // Se viene fornito un userId, filtra la query
+        // Se viene fornito un userId, filtra la query e prendo solo gli annunci dell'utente per VendiFragment
         if (userId != null) {
             query = query.whereEqualTo("userId", userId)
         }
 
+        // Ordina gli annunci per data di creazione in ordine decrescente
         query.orderBy("dataCreazione", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { documents ->
                 val listaAnnunci = documents.toObjects(Annuncio::class.java).map { annuncio ->
-                    // Assicurati che ogni annuncio abbia un ID
                     if (annuncio.id.isEmpty()) {
                         annuncio.id = documents.find { it.toObject(Annuncio::class.java) == annuncio }?.id ?: ""
                     }
@@ -52,7 +52,7 @@ class AnnunciViewModel : ViewModel() {
             _messaggio.value = "Impossibile aggiornare il like: ID annuncio non valido"
             return
         }
-        
+
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
         if (currentUserId == null) {
             _messaggio.value = "Devi essere loggato per mettere like"
@@ -63,7 +63,7 @@ class AnnunciViewModel : ViewModel() {
 
         val updatedLikedBy = annuncio.likedBy.toMutableList()
         val updatedLikes: Int
-        
+
         if (hasLiked) {
             // Rimuovi il like
             updatedLikedBy.remove(currentUserId)
@@ -73,16 +73,16 @@ class AnnunciViewModel : ViewModel() {
             updatedLikedBy.add(currentUserId)
             updatedLikes = annuncio.likes + 1
         }
-        
+
         // Crea una copia aggiornata dell'annuncio per l'aggiornamento locale
         val updatedAnnuncio = annuncio.copy(
             likes = updatedLikes,
             likedBy = updatedLikedBy
         )
-        
+
         // Aggiorna immediatamente la UI
         updateLocalAnnuncio(updatedAnnuncio)
-        
+
         // Aggiorna Firestore
         val updates = hashMapOf<String, Any>(
             "likes" to updatedLikes,
@@ -92,7 +92,7 @@ class AnnunciViewModel : ViewModel() {
                 FieldValue.arrayUnion(currentUserId)
             }
         )
-        
+
         db.collection("annunci")
             .document(annuncio.id)
             .update(updates)
@@ -102,7 +102,7 @@ class AnnunciViewModel : ViewModel() {
                 _messaggio.value = "Errore nell'aggiornamento del like: ${exception.message}"
             }
     }
-    
+
     private fun updateLocalAnnuncio(updatedAnnuncio: Annuncio) {
         val listaAggiornata = _annunci.value?.toMutableList() ?: mutableListOf()
         val index = listaAggiornata.indexOfFirst { it.id == updatedAnnuncio.id }
@@ -111,10 +111,5 @@ class AnnunciViewModel : ViewModel() {
             _annunci.value = listaAggiornata
         }
     }
-    
-    // Metodo per verificare se l'utente corrente ha messo like a un annuncio
-    fun hasUserLikedAnnuncio(annuncio: Annuncio): Boolean {
-        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return false
-        return annuncio.likedBy.contains(currentUserId)
-    }
+
 }
