@@ -43,7 +43,7 @@
         android:layout_gravity="bottom"
         android:background="#CCFFFFFF"
         app:itemIconSize="24dp"
-        app:itemIconTint="@color/bottom_nav_item_color"
+        app:itemIconTint="@color/bottom_nav_icon_color"
         app:itemTextColor="@color/bottom_nav_item_color"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />

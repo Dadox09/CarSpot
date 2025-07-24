@@ -14,8 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        
-        <!-- Image container -->
+
         <androidx.cardview.widget.CardView
             android:id="@+id/imageContainer"
             android:layout_width="match_parent"
@@ -34,8 +33,7 @@
                 android:contentDescription="Immagine annuncio" />
                 
         </androidx.cardview.widget.CardView>
-        
-        <!-- Badge "In evidenza" -->
+
         <TextView
             android:id="@+id/badgeEvidenza"
             android:layout_width="wrap_content"

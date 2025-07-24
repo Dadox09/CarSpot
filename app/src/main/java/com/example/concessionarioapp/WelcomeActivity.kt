@@ -58,6 +58,7 @@ class WelcomeActivity : AppCompatActivity() {
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
             .setTheme(R.style.FirebaseUI)
+            .setLogo(R.drawable.logo)
             .build()
 
         binding.registerButton.setOnClickListener {

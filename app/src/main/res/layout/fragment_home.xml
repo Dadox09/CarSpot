@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:paddingBottom="120dp">
 
-        <!-- Logo o Immagine principale -->
         <ImageView
             android:id="@+id/logoImageView"
             android:layout_width="400dp"
@@ -25,7 +24,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Titolo principale -->
         <TextView
             android:id="@+id/welcomeTitleTextView"
             android:layout_width="0dp"
@@ -42,7 +40,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/logoImageView" />
 
-        <!-- Slogan accattivante -->
         <TextView
             android:id="@+id/sloganTextView"
             android:layout_width="0dp"
@@ -59,7 +56,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/welcomeTitleTextView" />
 
-        <!-- Card per Compra -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/compraCard"
             android:layout_width="0dp"
@@ -117,7 +113,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Card per Vendi -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/vendiCard"
             android:layout_width="0dp"
@@ -175,7 +170,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Card per Profilo -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/profiloCard"
             android:layout_width="0dp"
@@ -233,7 +227,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Sezione Annunci in Evidenza -->
         <TextView
             android:id="@+id/annunciEvidenzaTextView"
             android:layout_width="0dp"
@@ -249,7 +242,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profiloCard" />
 
-        <!-- Carosello orizzontale per annunci in evidenza -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/annunciEvidenzaRecyclerView"
             android:layout_width="0dp"
@@ -265,7 +257,6 @@
             tools:itemCount="3"
             tools:listitem="@layout/item_annuncio_evidenza" />
 
-        <!-- Indicatore di caricamento -->
         <ProgressBar
             android:id="@+id/loadingProgressBar"
             android:layout_width="wrap_content"

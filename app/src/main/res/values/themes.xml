@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Splash screen theme. -->
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/colorPrimary</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splashlogo</item>

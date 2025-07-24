@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="32dp"
-        android:paddingHorizontal="16dp">
+        android:paddingHorizontal="16dp"
+        >
 
-        <!-- Header Card con titolo e prezzo -->
         <androidx.cardview.widget.CardView
             android:id="@+id/headerCard"
             android:layout_width="match_parent"
@@ -24,7 +24,8 @@
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:backgroundTint="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,7 +33,6 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Titolo dell'annuncio -->
                 <TextView
                     android:id="@+id/titoloTextView"
                     android:layout_width="match_parent"
@@ -42,7 +42,6 @@
                     android:textStyle="bold"
                     tools:text="BMW Serie 3 320d" />
 
-                <!-- Prezzo -->
                 <TextView
                     android:id="@+id/prezzoTextView"
                     android:layout_width="match_parent"
@@ -55,7 +54,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card per l'immagine -->
         <androidx.cardview.widget.CardView
             android:id="@+id/imageCard"
             android:layout_width="match_parent"
@@ -76,7 +74,6 @@
                 android:src="@drawable/placeholder" />
         </androidx.cardview.widget.CardView>
 
-        <!-- Card Specifiche Auto -->
         <androidx.cardview.widget.CardView
             android:id="@+id/specificheCard"
             android:layout_width="match_parent"
@@ -86,7 +83,8 @@
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageCard">
+            app:layout_constraintTop_toBottomOf="@+id/imageCard"
+            android:backgroundTint="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -94,7 +92,6 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Titolo Specifiche -->
                 <TextView
                     android:id="@+id/specificheLabel"
                     android:layout_width="match_parent"
@@ -112,14 +109,12 @@
                     android:layout_marginBottom="16dp"
                     android:background="#E0E0E0" />
 
-                <!-- Grid di specifiche in layout a griglia -->
                 <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:columnCount="2"
                     android:rowCount="5">
 
-                    <!-- Anno -->
                     <TextView
                         android:id="@+id/annoLabel"
                         android:layout_width="wrap_content"
@@ -140,7 +135,6 @@
                         android:textStyle="bold"
                         tools:text="2020" />
 
-                    <!-- Cilindrata -->
                     <TextView
                         android:id="@+id/cilindrataLabel"
                         android:layout_width="wrap_content"
@@ -161,7 +155,6 @@
                         android:textStyle="bold"
                         tools:text="1995 cc" />
 
-                    <!-- Chilometraggio -->
                     <TextView
                         android:id="@+id/chilometraggioLabel"
                         android:layout_width="wrap_content"
@@ -182,7 +175,6 @@
                         android:textStyle="bold"
                         tools:text="45.000 km" />
 
-                    <!-- Carburante -->
                     <TextView
                         android:id="@+id/carburanteLabel"
                         android:layout_width="wrap_content"
@@ -203,7 +195,6 @@
                         android:textStyle="bold"
                         tools:text="Diesel" />
 
-                    <!-- Cambio -->
                     <TextView
                         android:id="@+id/cambioLabel"
                         android:layout_width="wrap_content"
@@ -225,7 +216,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card Descrizione -->
         <androidx.cardview.widget.CardView
             android:id="@+id/descrizioneCard"
             android:layout_width="match_parent"
@@ -235,7 +225,8 @@
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/specificheCard">
+            app:layout_constraintTop_toBottomOf="@+id/specificheCard"
+            android:backgroundTint="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -243,7 +234,6 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Titolo Descrizione -->
                 <TextView
                     android:id="@+id/descrizioneLabel"
                     android:layout_width="match_parent"
@@ -272,7 +262,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card Venditore -->
         <androidx.cardview.widget.CardView
             android:id="@+id/venditoreCard"
             android:layout_width="match_parent"
@@ -282,7 +271,8 @@
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descrizioneCard">
+            app:layout_constraintTop_toBottomOf="@+id/descrizioneCard"
+            android:backgroundTint="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -290,7 +280,6 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Titolo Venditore -->
                 <TextView
                     android:id="@+id/venditoreLabel"
                     android:layout_width="match_parent"
@@ -308,14 +297,12 @@
                     android:layout_marginBottom="16dp"
                     android:background="#E0E0E0" />
 
-                <!-- Informazioni venditore in layout a griglia -->
                 <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:columnCount="2"
                     android:rowCount="3">
 
-                    <!-- Nome -->
                     <TextView
                         android:id="@+id/venditoreNomeLabel"
                         android:layout_width="wrap_content"
@@ -336,7 +323,6 @@
                         android:textStyle="bold"
                         tools:text="Mario Rossi" />
 
-                    <!-- Contatto -->
                     <TextView
                         android:id="@+id/contattoLabel"
                         android:layout_width="wrap_content"
@@ -357,7 +343,6 @@
                         android:textStyle="bold"
                         tools:text="mario.rossi@example.com" />
 
-                    <!-- Data -->
                     <TextView
                         android:id="@+id/dataLabel"
                         android:layout_width="wrap_content"
@@ -379,7 +364,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card per i pulsanti -->
         <androidx.cardview.widget.CardView
             android:id="@+id/buttonCard"
             android:layout_width="match_parent"
@@ -389,7 +373,8 @@
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/venditoreCard">
+            app:layout_constraintTop_toBottomOf="@+id/venditoreCard"
+            android:backgroundTint="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -397,7 +382,6 @@
                 android:orientation="horizontal"
                 android:padding="16dp">
 
-                <!-- Pulsante Contatta -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/contattaButton"
                     android:layout_width="0dp"
@@ -412,7 +396,6 @@
                     android:textColor="@android:color/white"
                     app:cornerRadius="8dp" />
 
-                <!-- Pulsante Elimina (visibile solo per il creatore) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/eliminaButton"
                     android:layout_width="0dp"
@@ -430,7 +413,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Spacer per il padding inferiore -->
         <View
             android:id="@+id/bottomSpacer"
             android:layout_width="match_parent"
@@ -438,7 +420,6 @@
             app:layout_constraintTop_toBottomOf="@+id/buttonCard"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <!-- Progress Bar -->
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
@@ -449,7 +430,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Error TextView -->
         <TextView
             android:id="@+id/errorTextView"
             android:layout_width="0dp"

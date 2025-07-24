@@ -16,8 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-        
-        <!-- Image container with rounded corners at the top -->
+
         <androidx.cardview.widget.CardView
             android:id="@+id/imageContainer"
             android:layout_width="match_parent"
@@ -36,8 +35,7 @@
                 android:contentDescription="Immagine annuncio" />
                 
         </androidx.cardview.widget.CardView>
-        
-        <!-- Content container -->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
