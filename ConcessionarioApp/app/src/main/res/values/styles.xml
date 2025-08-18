@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomBottomAppBar" parent="Widget.MaterialComponents.BottomAppBar">
+        <item name="android:paddingBottom">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="fabCradleMargin">0dp</item>
+        <item name="fabCradleRoundedCornerRadius">0dp</item>
+        <item name="fabCradleVerticalOffset">0dp</item>
+    </style>
+
+    <style name="CustomBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/white</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="itemIconSize">24dp</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+</resources>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/compraFragment"
+        android:name="com.example.concessionarioapp.fragments.CompraFragment"
+        android:label="fragment_compra"
+        tools:layout="@layout/fragment_compra" >
+        <action
+            android:id="@+id/action_compraFragment_to_vendiFragment"
+            app:destination="@id/vendiFragment" />
+        <action
+            android:id="@+id/action_compraFragment_to_profiloFragment"
+            app:destination="@id/profiloFragment" />
+        <action
+            android:id="@+id/action_compraFragment_to_dettaglioAnnuncioFragment"
+            app:destination="@id/dettaglioAnnuncioFragment">
+            <argument
+                android:name="annuncioId"
+                app:argType="string" />
+        </action>
+        <action
+            android:id="@+id/action_compraFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    
+    <fragment
+        android:id="@+id/vendiFragment"
+        android:name="com.example.concessionarioapp.fragments.VendiFragment"
+        android:label="fragment_vendi"
+        tools:layout="@layout/fragment_vendi" >
+        <action
+            android:id="@+id/action_vendiFragment_to_creaAnnuncioFragment"
+            app:destination="@id/creaAnnuncioFragment" />
+        <action
+            android:id="@+id/action_vendiFragment_to_compraFragment"
+            app:destination="@id/compraFragment" />
+        <action
+            android:id="@+id/action_vendiFragment_to_profiloFragment"
+            app:destination="@id/profiloFragment" />
+        <action
+            android:id="@+id/action_vendiFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_vendiFragment_to_dettaglioAnnuncioFragment"
+            app:destination="@id/dettaglioAnnuncioFragment" />
+    </fragment>
+    
+    <fragment
+        android:id="@+id/creaAnnuncioFragment"
+        android:name="com.example.concessionarioapp.fragments.CreaAnnuncioFragment"
+        android:label="fragment_crea_annuncio"
+        tools:layout="@layout/fragment_crea_annuncio" >
+        <action
+            android:id="@+id/action_creaAnnuncioFragment_to_vendiFragment"
+            app:destination="@id/vendiFragment" />
+        <action
+            android:id="@+id/action_creaAnnuncioFragment_to_compraFragment"
+            app:destination="@id/compraFragment" />
+        <action
+            android:id="@+id/action_creaAnnuncioFragment_to_profiloFragment"
+            app:destination="@id/profiloFragment" />
+        <action
+            android:id="@+id/action_creaAnnuncioFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    
+    <fragment
+        android:id="@+id/profiloFragment"
+        android:name="com.example.concessionarioapp.fragments.ProfiloFragment"
+        android:label="fragment_profilo"
+        tools:layout="@layout/fragment_profilo" >
+        <action
+            android:id="@+id/action_profiloFragment_to_compraFragment"
+            app:destination="@id/compraFragment" />
+        <action
+            android:id="@+id/action_profiloFragment_to_vendiFragment"
+            app:destination="@id/vendiFragment" />
+        <action
+            android:id="@+id/action_profiloFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/dettaglioAnnuncioFragment"
+        android:name="com.example.concessionarioapp.fragments.DettaglioAnnuncioFragment"
+        android:label="Dettaglio Annuncio"
+        tools:layout="@layout/fragment_dettaglio_annuncio">
+        <argument
+            android:name="annuncioId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_dettaglioAnnuncioFragment_to_compraFragment"
+            app:destination="@id/compraFragment" />
+        <action
+            android:id="@+id/action_dettaglioAnnuncioFragment_to_profiloFragment"
+            app:destination="@id/profiloFragment" />
+        <action
+            android:id="@+id/action_dettaglioAnnuncioFragment_to_vendiFragment"
+            app:destination="@id/vendiFragment" />
+        <action
+            android:id="@+id/action_dettaglioAnnuncioFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.concessionarioapp.fragments.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_compraFragment"
+            app:destination="@id/compraFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_vendiFragment"
+            app:destination="@id/vendiFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profiloFragment"
+            app:destination="@id/profiloFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_dettaglioAnnuncioFragment"
+            app:destination="@id/dettaglioAnnuncioFragment">
+            <argument
+                android:name="annuncioId"
+                app:argType="string" />
+        </action>
+    </fragment>
+</navigation>
