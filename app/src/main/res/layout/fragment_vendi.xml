@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/welcome_gradient_bg"
+    android:background="@drawable/gradient_background"
     tools:context=".fragments.VendiFragment">
 
     <TextView
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:text="I tuoi annunci in vendita"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

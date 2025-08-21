@@ -5,220 +5,544 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/background_primary"
     tools:context=".fragments.CreaAnnuncioFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="80dp">
+        android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/titoloEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Titolo Annuncio"
-                android:inputType="textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Indicatore Prezzo AI -->
+        <!-- Header con titolo -->
         <LinearLayout
-            android:id="@+id/layoutPrezzoAI"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_ai_spark"
-                app:tint="?attr/colorPrimary" />
+            android:background="@drawable/header_gradient_background"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="32dp"
+            android:elevation="4dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="Suggerito dall'AI" />
-        </LinearLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/prezzoInputLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/prezzoEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Prezzo"
-                android:inputType="numberDecimal" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/suggerisciPrezzoButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Genera Prezzo" />
-
-        <!-- Indicatore Descrizione AI -->
-        <LinearLayout
-            android:id="@+id/layoutDescrizioneAI"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_ai_spark"
-                app:tint="?attr/colorPrimary" />
+                android:text="Crea il tuo annuncio"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_gravity="start" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="Suggerito dall'AI" />
+                android:layout_marginTop="4dp"
+                android:text="Aggiungi tutti i dettagli per vendere al meglio"
+                android:textSize="14sp"
+                android:textColor="@color/white_alpha_80"
+                android:layout_gravity="start" />
+
         </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/descrizioneInputLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/descrizioneEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Descrizione"
-                android:inputType="textMultiLine"
-                android:minLines="4" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/generaDescrizioneButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Genera Descrizione" />
-
+        <!-- Container principale con card effect -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
+            android:layout_marginTop="-16dp"
+            android:background="@drawable/card_rounded_top_background"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="100dp"
+            android:elevation="2dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/annoInputLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
+            <!-- Sezione Informazioni Principali -->
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1">
+                android:text="Informazioni principali"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="16dp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/annoEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Anno"
-                    android:inputType="number" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/chilometraggioInputLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/chilometraggioEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Chilometraggio"
-                    android:inputType="number" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-        
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/cilindrataInputLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/cilindrataEditText"
+            <!-- Titolo con icona -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Cilindrata (cc)"
-                android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_title"
+                    app:tint="@color/accent_red"
+                    android:layout_marginEnd="8dp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/carburanteInputLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/ModernTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:boxStrokeColor="@color/accent_red"
+                    app:hintTextColor="@color/accent_red">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/titoloEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Titolo dell'annuncio"
+                        android:inputType="textCapSentences"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <!-- Sezione Prezzo con AI -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1">
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/card_background">
 
-                <AutoCompleteTextView
-                    android:id="@+id/carburanteAutoComplete"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Carburante"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cambioInputLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_price"
+                            app:tint="@color/accent_red" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:text="Prezzo"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary" />
+
+                        <!-- Indicatore AI per prezzo -->
+                        <LinearLayout
+                            android:id="@+id/layoutPrezzoAI"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:background="@drawable/ai_indicator_background"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="4dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <ImageView
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:src="@drawable/ic_ai_spark"
+                                app:tint="@color/accent_red" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:text="AI"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/accent_red" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/prezzoInputLayout"
+                        style="@style/ModernTextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:boxStrokeColor="@color/accent_red"
+                        app:hintTextColor="@color/accent_red"
+                        app:prefixText="€ "
+                        app:prefixTextColor="@color/accent_red">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/prezzoEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Inserisci il prezzo"
+                            android:inputType="numberDecimal"
+                            android:textColor="@color/text_primary"
+                            android:textSize="16sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/suggerisciPrezzoButton"
+                        style="@style/ModernOutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="✨ Suggerisci prezzo con AI"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:iconGravity="textStart"
+                        app:iconSize="16dp"
+                        app:strokeColor="@color/accent_red"
+                        app:strokeWidth="2dp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Sezione Descrizione con AI -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/card_background">
 
-                <AutoCompleteTextView
-                    android:id="@+id/cambioAutoComplete"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Cambio"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_description"
+                            app:tint="@color/accent_red" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:text="Descrizione"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary" />
+
+                        <!-- Indicatore AI per descrizione -->
+                        <LinearLayout
+                            android:id="@+id/layoutDescrizioneAI"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:background="@drawable/ai_indicator_background"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="4dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <ImageView
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:src="@drawable/ic_ai_spark"
+                                app:tint="@color/accent_red" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:text="AI"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/accent_red" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/descrizioneInputLayout"
+                        style="@style/ModernTextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:boxStrokeColor="@color/accent_red"
+                        app:hintTextColor="@color/accent_red">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/descrizioneEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Descrivi il veicolo in dettaglio"
+                            android:inputType="textMultiLine"
+                            android:minLines="4"
+                            android:textColor="@color/text_primary"
+                            android:textSize="16sp"
+                            android:gravity="top" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/generaDescrizioneButton"
+                        style="@style/ModernOutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="✨ Genera descrizione con AI"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:iconGravity="textStart"
+                        app:iconSize="16dp"
+                        app:strokeColor="@color/accent_red"
+                        app:strokeWidth="2dp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Sezione Dettagli Tecnici -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dettagli tecnici"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Grid per Anno e Chilometraggio -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginEnd="8dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_calendar"
+                        app:tint="@color/accent_red"
+                        android:layout_marginEnd="8dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/annoInputLayout"
+                        style="@style/ModernTextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:boxStrokeColor="@color/accent_red"
+                        app:hintTextColor="@color/accent_red">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/annoEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Anno"
+                            android:inputType="number"
+                            android:textColor="@color/text_primary"
+                            android:textSize="16sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="8dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_speedometer"
+                        app:tint="@color/accent_red"
+                        android:layout_marginEnd="8dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/chilometraggioInputLayout"
+                        style="@style/ModernTextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:boxStrokeColor="@color/accent_red"
+                        app:hintTextColor="@color/accent_red"
+                        app:suffixText=" km"
+                        app:suffixTextColor="@color/text_secondary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/chilometraggioEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Km"
+                            android:inputType="number"
+                            android:textColor="@color/text_primary"
+                            android:textSize="16sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Cilindrata -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_engine"
+                    app:tint="@color/accent_red"
+                    android:layout_marginEnd="8dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cilindrataInputLayout"
+                    style="@style/ModernTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:boxStrokeColor="@color/accent_red"
+                    app:hintTextColor="@color/accent_red"
+                    app:suffixText=" cc"
+                    app:suffixTextColor="@color/text_secondary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cilindrataEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Cilindrata"
+                        android:inputType="number"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <!-- Carburante e Cambio -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="32dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginEnd="8dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_fuel"
+                        app:tint="@color/accent_red"
+                        android:layout_marginEnd="8dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/carburanteInputLayout"
+                        style="@style/ModernDropdownLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:boxStrokeColor="@color/accent_red"
+                        app:hintTextColor="@color/accent_red">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/carburanteAutoComplete"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Carburante"
+                            android:inputType="none"
+                            android:textColor="@color/text_primary"
+                            android:textSize="16sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="8dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_transmission"
+                        app:tint="@color/accent_red"
+                        android:layout_marginEnd="8dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/cambioInputLayout"
+                        style="@style/ModernDropdownLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:boxStrokeColor="@color/accent_red"
+                        app:hintTextColor="@color/accent_red">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/cambioAutoComplete"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Cambio"
+                            android:inputType="none"
+                            android:textColor="@color/text_primary"
+                            android:textSize="16sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Pulsante Salva Principale -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/salvaButton"
+                style="@style/ModernPrimaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Pubblica Annuncio"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:icon="@drawable/ic_publish"
+                app:iconGravity="textStart"
+                app:iconSize="20dp"
+                app:cornerRadius="16dp"
+                android:backgroundTint="@color/accent_red" />
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/salvaButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Salva Annuncio" />
 
     </LinearLayout>
 

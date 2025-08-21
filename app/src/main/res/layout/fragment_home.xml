@@ -5,267 +5,332 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@drawable/welcome_gradient_bg"
+    android:background="@drawable/gradient_background"
     tools:context=".fragments.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="120dp">
+        android:paddingBottom="100dp">
 
-        <ImageView
-            android:id="@+id/logoImageView"
-            android:layout_width="400dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="48dp"
-            android:contentDescription="Logo dell'app"
-            android:src="@drawable/logo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gradient_background"
+                android:padding="20dp"
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/welcomeTitleTextView"
+                    <ImageView
+                        android:id="@+id/logoImageView"
+                        android:layout_marginTop="38dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:contentDescription="Logo dell'app"
+                        android:src="@drawable/logo"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+
+                <TextView
+                    android:id="@+id/welcomeTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="Compra veloce, vendi facile"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.02"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/logoImageView" />
+
+                <TextView
+                    android:id="@+id/sloganTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center"
+                    android:text="La tua auto ideale è a un tap di distanza"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="14sp"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/welcomeTitleTextView" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Action Cards Grid -->
+        <LinearLayout
+            android:id="@+id/actionCardsLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title">
+
+            <!-- Compra Card - Modern Design -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/compraCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:strokeColor="@color/accent_red_light"
+                app:strokeWidth="2dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="24dp">
+
+                    <View
+                        android:id="@+id/compraIndicator"
+                        android:layout_width="4dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/indicator_gradient_red"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/compraIcon"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/circle_background_red"
+                        android:contentDescription="Icona ricerca"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_search"
+                        app:tint="@android:color/white"
+                        app:layout_constraintStart_toEndOf="@+id/compraIndicator"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/compraTitleTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Cerca la tua auto"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/compraIcon"
+                        app:layout_constraintTop_toTopOf="@+id/compraIcon" />
+
+                    <TextView
+                        android:id="@+id/compraDescTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Esplora migliaia di annunci"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/compraIcon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/compraIcon"
+                        app:layout_constraintTop_toBottomOf="@+id/compraTitleTextView" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Vendi Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/vendiCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:strokeColor="@color/accent_red_dark"
+                app:strokeWidth="2dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="24dp">
+
+                    <View
+                        android:id="@+id/vendiIndicator"
+                        android:layout_width="4dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/indicator_gradient_dark_red"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/vendiIcon"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/circle_background_dark_red"
+                        android:contentDescription="Icona vendita"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_sell"
+                        app:tint="@android:color/white"
+                        app:layout_constraintStart_toEndOf="@+id/vendiIndicator"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/vendiTitleTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Vendi la tua auto"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/vendiIcon"
+                        app:layout_constraintTop_toTopOf="@+id/vendiIcon" />
+
+                    <TextView
+                        android:id="@+id/vendiDescTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Crea il tuo annuncio"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/vendiIcon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/vendiIcon"
+                        app:layout_constraintTop_toBottomOf="@+id/vendiTitleTextView" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Profilo Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/profiloCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:strokeColor="@color/colorAccent"
+                app:strokeWidth="2dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="24dp">
+
+                    <View
+                        android:id="@+id/profiloIndicator"
+                        android:layout_width="4dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/indicator_gradient_orange"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/profiloIcon"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/circle_background_orange"
+                        android:contentDescription="Icona profilo"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_profile"
+                        app:tint="@android:color/white"
+                        app:layout_constraintStart_toEndOf="@+id/profiloIndicator"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/profiloTitleTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Il tuo profilo"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/profiloIcon"
+                        app:layout_constraintTop_toTopOf="@+id/profiloIcon" />
+
+                    <TextView
+                        android:id="@+id/profiloDescTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Gestisci le tue informazioni"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/profiloIcon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/profiloIcon"
+                        app:layout_constraintTop_toBottomOf="@+id/profiloTitleTextView" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <!-- Featured Section with Modern Header -->
+        <LinearLayout
+            android:id="@+id/featuredSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="80dp"
-            android:gravity="center"
-            android:text="Compra veloce, vendi facile."
-            android:textColor="@android:color/white"
-            android:textSize="28sp"
-            android:textStyle="bold"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/logoImageView" />
+            app:layout_constraintTop_toBottomOf="@+id/actionCardsLayout">
 
-        <TextView
-            android:id="@+id/sloganTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:gravity="center"
-            android:text="La tua auto ideale è a un tap di distanza."
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcomeTitleTextView" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/compraCard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="24dp"
-            app:cardBackgroundColor="@color/colorPrimary"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sloganTextView">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
+                android:id="@+id/annunciEvidenzaTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:layout_marginBottom="16dp"
+                android:text="🔥 Annunci in evidenza"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:drawablePadding="8dp" />
 
-                <ImageView
-                    android:id="@+id/compraIconImageView"
-                    android:layout_width="100dp"
-                    android:layout_height="48dp"
-                    android:contentDescription="Icona compra"
-                    android:src="@drawable/ferrari"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/compraTitleTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Cerca la tua auto"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/compraDescTextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/compraIconImageView"
-                    app:layout_constraintTop_toTopOf="@+id/compraIconImageView" />
-
-                <TextView
-                    android:id="@+id/compraDescTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Esplora gli annunci disponibili"
-                    android:textColor="@android:color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/compraIconImageView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/compraIconImageView"
-                    app:layout_constraintTop_toBottomOf="@+id/compraTitleTextView" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/vendiCard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            app:cardBackgroundColor="@color/colorPrimaryDark"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/compraCard">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/annunciEvidenzaRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_annuncio_evidenza"/>
 
-                <ImageView
-                    android:id="@+id/vendiIconImageView"
-                    android:layout_width="100dp"
-                    android:layout_height="56dp"
-                    android:contentDescription="Icona vendi"
-                    android:src="@drawable/bmw"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/vendiTitleTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Vendi la tua auto"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/vendiDescTextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/vendiIconImageView"
-                    app:layout_constraintTop_toTopOf="@+id/vendiIconImageView" />
-
-                <TextView
-                    android:id="@+id/vendiDescTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Crea il tuo annuncio in pochi minuti"
-                    android:textColor="@android:color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/vendiIconImageView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/vendiIconImageView"
-                    app:layout_constraintTop_toBottomOf="@+id/vendiTitleTextView" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/profiloCard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            app:cardBackgroundColor="@color/colorAccent"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vendiCard">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
-
-                <ImageView
-                    android:id="@+id/profiloIconImageView"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:contentDescription="Icona profilo"
-                    android:src="@drawable/ic_profile"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/profiloTitleTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Il tuo profilo"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/profiloDescTextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/profiloIconImageView"
-                    app:layout_constraintTop_toTopOf="@+id/profiloIconImageView" />
-
-                <TextView
-                    android:id="@+id/profiloDescTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Gestisci i tuoi annunci e le tue informazioni"
-                    android:textColor="@android:color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/profiloIconImageView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/profiloIconImageView"
-                    app:layout_constraintTop_toBottomOf="@+id/profiloTitleTextView" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <TextView
-            android:id="@+id/annunciEvidenzaTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="24dp"
-            android:text="Annunci in evidenza"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profiloCard" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/annunciEvidenzaRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/annunciEvidenzaTextView"
-            tools:itemCount="3"
-            tools:listitem="@layout/item_annuncio_evidenza" />
-
+        <!-- Loading Progress Bar -->
         <ProgressBar
             android:id="@+id/loadingProgressBar"
+            style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/annunciEvidenzaRecyclerView"
+            android:indeterminateTint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/featuredSection"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/annunciEvidenzaRecyclerView" />
+            app:layout_constraintTop_toTopOf="@+id/featuredSection" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

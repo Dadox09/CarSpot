@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Colori originali -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -10,9 +10,37 @@
     <color name="teal_700">#FF018786</color>
     <color name="red_500">#FF0000</color>
 
+    <!-- Palette principale del tuo tema -->
     <color name="colorAccent">#DA8803</color>
     <color name="colorPrimary">#941B0C</color>
     <color name="colorPrimaryDark">#621708</color>
     <color name="colorDark">#220901</color>
 
+    <!-- Adattamento per il layout usando i tuoi colori -->
+    <color name="accent_red">@color/colorPrimary</color>
+    <color name="accent_red_dark">@color/colorPrimaryDark</color>
+    <color name="accent_red_light">#BC2A1B</color>
+    <color name="accent_red_alpha">#33941B0C</color>
+
+    <!-- Background -->
+    <color name="background_primary">#F5F5F5</color>
+    <color name="card_background">@color/white</color>
+
+    <!-- Text colors -->
+    <color name="text_primary">@color/colorDark</color>
+    <color name="text_secondary">#757575</color>
+    <color name="white_alpha_80">#CCFFFFFF</color>
+
+    <!-- Gradients -->
+    <color name="gradient_red_start">@color/colorPrimary</color>
+    <color name="gradient_red_end">@color/colorPrimaryDark</color>
+
+    <!-- Colori per Bottom Navigation  -->
+    <color name="modern_bottom_nav_active">#941B0C</color>
+    <color name="modern_bottom_nav_inactive">#9E9E9E</color>
+    <color name="modern_bottom_nav_indicator">#1A941B0C</color>
+
+    <!-- Selettori di colore -->
+    <color name="modern_bottom_nav_icon_color">@color/bottom_nav_selector</color>
+    <color name="modern_bottom_nav_text_color">@color/bottom_nav_selector</color>
 </resources>

@@ -7,7 +7,7 @@
     
     <style name="Base.Theme.ConcessionarioApp" parent="Theme.Material3.DayNight.NoActionBar">
 
-        <item name="android:fontFamily">@font/font</item>
+        <item name="android:fontFamily">@font/outfitmedium</item>
 
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
@@ -68,6 +68,10 @@
 
     <style name="ThemeOverlay.App.BottomAppBar" parent="">
         <item name="colorOnSurface">@color/white</item>
+    </style>
+
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/text_input_box_stroke_color</item>
     </style>
 
 </resources>
