@@ -1,12 +1,19 @@
 package com.example.concessionarioapp.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.concessionarioapp.classes.Annuncio
 import com.example.concessionarioapp.classes.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class DettaglioAnnuncioViewModel : ViewModel() {
 
@@ -30,9 +37,9 @@ class DettaglioAnnuncioViewModel : ViewModel() {
 
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    private val storage = FirebaseStorage.getInstance()
 
     fun caricaDettagliAnnuncio(annuncioId: String) {
-        // Prendo i dati relativi all'annuncio
         _isLoading.value = true
         _error.value = null
         firestore.collection("annunci")
@@ -43,7 +50,6 @@ class DettaglioAnnuncioViewModel : ViewModel() {
                     val annuncio = document.toObject(Annuncio::class.java)
                     _annuncio.value = annuncio
 
-                    // Controlla se l'utente corrente può eliminare l'annuncio
                     val currentUserId = auth.currentUser?.uid
                     _canDelete.value = currentUserId != null && currentUserId == annuncio?.userId
 
@@ -60,59 +66,81 @@ class DettaglioAnnuncioViewModel : ViewModel() {
     }
 
     private fun caricaDatiVenditore(userId: String) {
-        // Prendo i dati relativi al venditore
         firestore.collection("users")
             .document(userId)
             .get()
             .addOnSuccessListener { document ->
                 if (document.exists() && document.data != null) {
-                    // Mapping manuale per evitare problemi
                     val venditore = User(
                         id = document.getString("id") ?: userId,
                         nome = document.getString("nome") ?: "Nome non disponibile",
                         email = document.getString("email") ?: "Email non disponibile",
                         telefono = document.getString("telefono")
                     )
-
-                    println("DEBUG: Venditore creato manualmente - ID: ${venditore.id}, Nome: ${venditore.nome}, Email: ${venditore.email}")
+                    Log.d("DettaglioAnnuncioViewModel", "Venditore caricato: ${venditore.email}")
                     _venditore.value = venditore
                 } else {
-                    val venditoreDefault = User(
+                    _venditore.value = User(
                         id = userId,
                         nome = "Utente non trovato",
                         email = "Contatto non disponibile",
                         telefono = null
                     )
-                    _venditore.value = venditoreDefault
                 }
             }
             .addOnFailureListener { exception ->
-                println("DEBUG: Errore nel caricamento venditore: ${exception.message}")
-                val venditoreDefault = User(
+                Log.e("DettaglioAnnuncioViewModel", "Errore nel caricamento venditore", exception)
+                _venditore.value = User(
                     id = userId,
                     nome = "Utente non trovato",
                     email = "Contatto non disponibile",
                     telefono = null
                 )
-                _venditore.value = venditoreDefault
             }
     }
 
     fun eliminaAnnuncio(annuncioId: String) {
-        // Elimina l'annuncio
         _isLoading.value = true
         _error.value = null
 
-        firestore.collection("annunci")
-            .document(annuncioId)
-            .delete()
-            .addOnSuccessListener {
-                _isLoading.value = false
+        viewModelScope.launch {
+            try {
+                // Get the ad data to find the image URL
+                val annuncioDoc = firestore.collection("annunci").document(annuncioId).get().await()
+                val annuncioData = annuncioDoc.toObject(Annuncio::class.java)
+
+                val imageUrls = annuncioData?.immagini ?: emptyList()
+                if (imageUrls.isNotEmpty()) {
+                    // Delete the first image from Firebase Storage
+                    val imageUrl = imageUrls.first()
+                    deleteImageFromStorage(imageUrl)
+                }
+
+                // Delete the Firestore document
+                firestore.collection("annunci").document(annuncioId).delete().await()
+
                 _deleteSuccess.value = true
-            }
-            .addOnFailureListener { exception ->
-                _error.value = "Errore nell'eliminazione: ${exception.message}"
+            } catch (e: Exception) {
+                Log.e("DettaglioAnnuncioViewModel", "Errore nell'eliminazione dell'annuncio", e)
+                _error.value = "Errore nell'eliminazione: ${e.message}"
+                _deleteSuccess.value = false
+            } finally {
                 _isLoading.value = false
             }
+        }
+    }
+
+    private suspend fun deleteImageFromStorage(imageUrl: String) {
+        return withContext(Dispatchers.IO) {
+            try {
+                val imageRef = storage.getReferenceFromUrl(imageUrl)
+                imageRef.delete().await()
+                Log.d("DettaglioAnnuncioViewModel", "Immagine eliminata con successo: $imageUrl")
+            } catch (e: Exception) {
+                // Log the error but don't re-throw it.
+                // We want to continue and delete the ad from Firestore even if the image delete fails.
+                Log.e("DettaglioAnnuncioViewModel", "Errore durante l'eliminazione dell'immagine: $imageUrl", e)
+            }
+        }
     }
 }

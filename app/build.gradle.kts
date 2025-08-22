@@ -90,4 +90,10 @@ dependencies {
     
     // Splash Screen API
     implementation("androidx.core:core-splashscreen:1.0.1")
-}
+
+    // Firebase Storage
+    implementation("com.google.firebase:firebase-storage:20.3.0")
+
+    // Per gestire le immagini
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    }

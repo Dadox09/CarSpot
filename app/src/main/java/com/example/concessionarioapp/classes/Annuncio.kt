@@ -18,5 +18,6 @@ data class Annuncio(
     val dataCreazione: Date? = null,
     val likes: Int = 0,
     val likedBy: MutableList<String> = mutableListOf(),
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    val immagini: List<String> = emptyList()
 )

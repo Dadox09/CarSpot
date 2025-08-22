@@ -53,14 +53,14 @@ class AnnuncioEvidenzaAdapter(
             val dettagli = "${annuncio.anno} • ${annuncio.carburante} • ${annuncio.chilometraggio} km"
             dettagliTextView.text = dettagli
 
-            if(!annuncio.imageUrl.isNullOrEmpty()){
-                Glide.with(itemView.context)
-                    .load(annuncio.imageUrl)
-                    .placeholder(R.drawable.placeholder) // Immagine mostrata durante il caricamento
-                    .error(R.drawable.placeholder) // Immagine mostrata in caso di errore
-                    .into(annuncioImageView)
+            if (annuncio.immagini.isNotEmpty()) {
+                Glide.with(itemView.context) // Usare il contesto della view
+                    .load(annuncio.immagini[0]) // Carica la prima immagine della lista
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+                    .into(annuncioImageView) // Utilizza la view locale
             } else {
-                // Se l'URL è nullo o vuoto, mostra il placeholder
+                // Se non ci sono immagini, mostra l'immagine di default
                 annuncioImageView.setImageResource(R.drawable.placeholder)
             }
         }

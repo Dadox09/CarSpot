@@ -107,12 +107,16 @@ class DettaglioAnnuncioFragment : Fragment() {
         binding.descrizioneTextView.text = annuncio.descrizione
 
         // Immagine dell'annuncio
-        Glide.with(this)
-            .load(annuncio.imageUrl)
-            .placeholder(R.drawable.placeholder) // Immagine di default
-            .error(R.drawable.placeholder) // Immagine di errore
-            .into(binding.immagineAnnuncioImageView)
-
+        if (annuncio.immagini.isNotEmpty()) {
+            Glide.with(this)
+                .load(annuncio.immagini[0]) // Carica la prima immagine della lista
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .into(binding.immagineAnnuncioImageView)
+        } else {
+            // Se non ci sono immagini, mostra l'immagine di default
+            binding.immagineAnnuncioImageView.setImageResource(R.drawable.placeholder)
+        }
 
         // Mostra i dettagli aggiuntivi dell'auto
         binding.annoTextView.text = annuncio.anno.toString()

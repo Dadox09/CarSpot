@@ -1,22 +1,29 @@
 package com.example.concessionarioapp.fragments
 
 import android.R
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.concessionarioapp.classes.Annuncio
 import com.example.concessionarioapp.NotificationService
+import com.example.concessionarioapp.adapters.FotoAdapter
 import com.example.concessionarioapp.databinding.FragmentCreaAnnuncioBinding
 import com.example.concessionarioapp.viewmodels.CreaAnnuncioViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.util.*
 
 class CreaAnnuncioFragment : Fragment() {
 
@@ -25,7 +32,32 @@ class CreaAnnuncioFragment : Fragment() {
 
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
+    private lateinit var storage: FirebaseStorage
     private val viewModel: CreaAnnuncioViewModel by viewModels()
+
+    // Lista delle foto selezionate
+    private val fotoSelezionate = mutableListOf<Uri>()
+    private lateinit var fotoAdapter: FotoAdapter
+
+    // Launcher per selezionare le foto
+    private val pickMultipleMedia = registerForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia(5)
+    ) { uris ->
+        if (uris.isNotEmpty()) {
+            val spazioDisponibile = 5 - fotoSelezionate.size
+            val daAggiungere = uris.take(spazioDisponibile)
+
+            daAggiungere.forEach { uri ->
+                fotoAdapter.addFoto(uri)
+            }
+
+            if (uris.size > spazioDisponibile) {
+                Toast.makeText(requireContext(),
+                    "Puoi aggiungere massimo 5 foto. Alcune foto non sono state aggiunte.",
+                    Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +68,7 @@ class CreaAnnuncioFragment : Fragment() {
         // Inizializza Firebase
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+        storage = FirebaseStorage.getInstance()
 
         return binding.root
     }
@@ -44,6 +77,7 @@ class CreaAnnuncioFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupScelte()
+        setupRecyclerView()
 
         binding.salvaButton.setOnClickListener {
             salvaAnnuncio()
@@ -70,6 +104,25 @@ class CreaAnnuncioFragment : Fragment() {
         }
 
         setupObservers()
+    }
+
+    private fun setupRecyclerView() {
+        fotoAdapter = FotoAdapter(
+            foto = fotoSelezionate,
+            onRemoveFoto = { position ->
+                fotoAdapter.removeFoto(position)
+            },
+            onAddFoto = {
+                pickMultipleMedia.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            }
+        )
+
+        binding.recyclerViewFoto.apply {
+            adapter = fotoAdapter
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
     }
 
     private fun setupScelte() {
@@ -152,7 +205,56 @@ class CreaAnnuncioFragment : Fragment() {
         // Bottone non abilitato per evitare doppi click
         binding.salvaButton.isEnabled = false
 
-        //Creo varaibile per salvare su firebas
+        // Mostra progress bar
+        binding.progressBar.visibility = View.VISIBLE
+
+        // Upload delle foto prima di salvare l'annuncio
+        uploadFoto { urlImmagini ->
+            salvaAnnuncioConImmagini(titolo, descrizione, prezzo, anno, cv, chilometraggio,
+                carburante, cambio, userId, urlImmagini)
+        }
+    }
+
+    private fun uploadFoto(onComplete: (List<String>) -> Unit) {
+        if (fotoSelezionate.isEmpty()) {
+            onComplete(emptyList())
+            return
+        }
+
+        val urlImmagini = mutableListOf<String>()
+        var uploadCompletati = 0
+        val totalUploads = fotoSelezionate.size
+
+        fotoSelezionate.forEach { uri ->
+            val fileName = "annunci/${UUID.randomUUID()}_${System.currentTimeMillis()}.jpg"
+            val imageRef = storage.reference.child(fileName)
+
+            imageRef.putFile(uri)
+                .addOnSuccessListener {
+                    imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                        urlImmagini.add(downloadUrl.toString())
+                        uploadCompletati++
+
+                        if (uploadCompletati == totalUploads) {
+                            onComplete(urlImmagini)
+                        }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(requireContext(),
+                        "Errore nel caricamento foto: ${e.message}",
+                        Toast.LENGTH_LONG).show()
+                    binding.salvaButton.isEnabled = true
+                    binding.progressBar.visibility = View.GONE
+                }
+        }
+    }
+
+    private fun salvaAnnuncioConImmagini(
+        titolo: String, descrizione: String, prezzo: Double, anno: Int,
+        cv: Int, chilometraggio: Int, carburante: String, cambio: String,
+        userId: String, urlImmagini: List<String>
+    ) {
         val nuovoAnnuncioRef = firestore.collection("annunci").document()
 
         val annuncio = Annuncio(
@@ -165,11 +267,13 @@ class CreaAnnuncioFragment : Fragment() {
             chilometraggio = chilometraggio,
             carburante = carburante,
             cambio = cambio,
-            userId = userId
+            userId = userId,
+            immagini = urlImmagini
         )
 
         nuovoAnnuncioRef.set(annuncio)
             .addOnSuccessListener {
+                binding.progressBar.visibility = View.GONE
                 Toast.makeText(requireContext(), "Annuncio salvato con successo!", Toast.LENGTH_SHORT).show()
 
                 // Invia una notifica a tutti gli utenti per il nuovo annuncio
@@ -182,6 +286,7 @@ class CreaAnnuncioFragment : Fragment() {
                 findNavController().navigate(com.example.concessionarioapp.R.id.action_creaAnnuncioFragment_to_vendiFragment)
             }
             .addOnFailureListener { e ->
+                binding.progressBar.visibility = View.GONE
                 Toast.makeText(requireContext(), "Errore nel salvataggio: ${e.message}", Toast.LENGTH_LONG).show()
                 // Riabilita il pulsante in caso di errore
                 binding.salvaButton.isEnabled = true
