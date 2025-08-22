@@ -94,7 +94,7 @@ class CreaAnnuncioFragment : Fragment() {
         val descrizione = binding.descrizioneEditText.text.toString().trim()
         val prezzoText = binding.prezzoEditText.text.toString().trim()
         val annoText = binding.annoEditText.text.toString().trim()
-        val cilindrataText = binding.cilindrataEditText.text.toString().trim()
+        val cvText = binding.cvEditText.text.toString().trim()
         val chilometraggioText = binding.chilometraggioEditText.text.toString().trim()
         val carburante = binding.carburanteAutoComplete.text.toString().trim()
         val cambio = binding.cambioAutoComplete.text.toString().trim()
@@ -102,7 +102,7 @@ class CreaAnnuncioFragment : Fragment() {
 
         // Verifica che i campi obbligatori siano compilati
         if (titolo.isEmpty() || descrizione.isEmpty() || prezzoText.isEmpty() || annoText.isEmpty() ||
-            cilindrataText.isEmpty() || chilometraggioText.isEmpty() || carburante.isEmpty() || cambio.isEmpty()) {
+            cvText.isEmpty() || chilometraggioText.isEmpty() || carburante.isEmpty() || cambio.isEmpty()) {
             Toast.makeText(requireContext(), "Per favore, compila tutti i campi", Toast.LENGTH_SHORT).show()
             return
         }
@@ -131,8 +131,8 @@ class CreaAnnuncioFragment : Fragment() {
             binding.annoInputLayout.error = null
         }
 
-        val cilindrata = cilindrataText.toIntOrNull()
-        if (cilindrata == null || cilindrata <= 0) {
+        val cv = cvText.toIntOrNull()
+        if (cv == null || cv <= 0) {
             binding.cilindrataInputLayout.error = "Inserisci una cilindrata valida"
             binding.cilindrataInputLayout.setErrorTextColor(ContextCompat.getColorStateList(requireContext(), R.color.white))
             return
@@ -161,7 +161,7 @@ class CreaAnnuncioFragment : Fragment() {
             descrizione = descrizione,
             prezzo = prezzo,
             anno = anno,
-            cilindrata = cilindrata,
+            cv = cv,
             chilometraggio = chilometraggio,
             carburante = carburante,
             cambio = cambio,
@@ -193,7 +193,7 @@ class CreaAnnuncioFragment : Fragment() {
             "titolo" to binding.titoloEditText.text.toString().trim(),
             "descrizione" to binding.descrizioneEditText.text.toString().trim(),
             "anno" to binding.annoEditText.text.toString().trim(),
-            "cilindrata" to binding.cilindrataEditText.text.toString().trim(),
+            "cv" to binding.cvEditText.text.toString().trim(),
             "chilometraggio" to binding.chilometraggioEditText.text.toString().trim(),
             "carburante" to binding.carburanteAutoComplete.text.toString().trim(),
             "cambio" to binding.cambioAutoComplete.text.toString().trim()

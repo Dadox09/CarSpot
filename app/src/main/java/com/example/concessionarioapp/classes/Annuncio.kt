@@ -9,7 +9,7 @@ data class Annuncio(
     val descrizione: String = "",
     val prezzo: Double = 0.0,
     val anno: Int = 0,
-    val cilindrata: Int = 0,
+    val cv: Int = 0,
     val chilometraggio: Int = 0,
     val carburante: String = "",
     val cambio: String = "",

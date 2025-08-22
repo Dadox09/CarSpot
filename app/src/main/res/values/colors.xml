@@ -36,7 +36,7 @@
     <color name="gradient_red_end">@color/colorPrimaryDark</color>
 
     <!-- Colori per Bottom Navigation  -->
-    <color name="modern_bottom_nav_active">#941B0C</color>
+    <color name="modern_bottom_nav_active">#FFFFFF</color>
     <color name="modern_bottom_nav_inactive">#9E9E9E</color>
     <color name="modern_bottom_nav_indicator">#1A941B0C</color>
 

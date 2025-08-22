@@ -39,7 +39,7 @@ class CreaAnnuncioViewModel : ViewModel() {
             - Chilometraggio: ${datiAuto["chilometraggio"]} km
             - Carburante: ${datiAuto["carburante"]}
             - Cambio: ${datiAuto["cambio"]}
-            - Cilindrata: ${datiAuto["cilindrata"]} cc
+            - Cv: ${datiAuto["cv"]} cv
             - Stato Generale (descrizione o voto 1-10): ${datiAuto["stato"]} // Dato cruciale
             - Manutenzione (es. "regolare", "documentata"): ${datiAuto["manutenzione"]} // Dato utile
             
@@ -91,7 +91,7 @@ class CreaAnnuncioViewModel : ViewModel() {
         - Chilometraggio: ${datiAuto["chilometraggio"]} km
         - Carburante: ${datiAuto["carburante"]}
         - Cambio: ${datiAuto["cambio"]}
-        - Cilindrata: ${datiAuto["cilindrata"]} cc
+        - Cv: ${datiAuto["cv"]} cv
         - Descrizione utente: ${datiAuto["descrizione"]}
         """
         eseguiChiamataAI(prompt) { response ->

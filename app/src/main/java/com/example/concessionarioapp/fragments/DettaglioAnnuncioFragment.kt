@@ -116,7 +116,7 @@ class DettaglioAnnuncioFragment : Fragment() {
 
         // Mostra i dettagli aggiuntivi dell'auto
         binding.annoTextView.text = annuncio.anno.toString()
-        binding.cilindrataTextView.text = "${annuncio.cilindrata} cc"
+        binding.cvTextView.text = "${annuncio.cv} cv"
         binding.chilometraggioTextView.text = "${annuncio.chilometraggio} km"
         binding.carburanteTextView.text = annuncio.carburante
         binding.cambioTextView.text = annuncio.cambio

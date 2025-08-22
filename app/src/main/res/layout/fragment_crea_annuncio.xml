@@ -408,7 +408,7 @@
 
             </LinearLayout>
 
-            <!-- Cilindrata -->
+            <!-- Cv -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -431,14 +431,14 @@
                     android:layout_weight="1"
                     app:boxStrokeColor="@color/accent_red"
                     app:hintTextColor="@color/accent_red"
-                    app:suffixText=" cc"
+                    app:suffixText=" cv"
                     app:suffixTextColor="@color/text_secondary">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/cilindrataEditText"
+                        android:id="@+id/cvEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Cilindrata"
+                        android:hint="Cavalli"
                         android:inputType="number"
                         android:textColor="@color/text_primary"
                         android:textSize="16sp" />
@@ -527,7 +527,6 @@
 
             </LinearLayout>
 
-            <!-- Pulsante Salva Principale -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/salvaButton"
                 style="@style/ModernPrimaryButton"
@@ -536,11 +535,8 @@
                 android:text="Pubblica Annuncio"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:icon="@drawable/ic_publish"
-                app:iconGravity="textStart"
-                app:iconSize="20dp"
                 app:cornerRadius="16dp"
-                android:backgroundTint="@color/accent_red" />
+                android:backgroundTint="@color/colorPrimaryDark" />
 
         </LinearLayout>
 
