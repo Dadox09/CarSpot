@@ -22,8 +22,8 @@ class MainActivity : AppCompatActivity() {
             setContentView(binding.root)
 
         // Imposta la toolbar con sfondo trasparente
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(true)
+        //setSupportActionBar(binding.toolbar)
+        //supportActionBar?.setDisplayShowTitleEnabled(true)
 
 
         // Inizializza Firebase Auth
