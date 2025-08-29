@@ -66,9 +66,28 @@ class ChatbotViewModel : ViewModel() {
                     Message(
                         role = "user",
                         content = if (suggestedAnnuncio != null) {
-                            "L'utente ha cercato un'auto. Ho trovato l'annuncio per una ${suggestedAnnuncio.titolo}. Suggerisci quest'auto all'utente. Messaggio originale: $userMessage"
-                        } else {
-                            "L'utente ha cercato un'auto, ma non abbiamo trovato annunci compatibili. Comunica all'utente che non abbiamo annunci per la sua richiesta. Messaggio originale: $userMessage"
+                            """ANNUNCIO TROVATO: Ho trovato un'auto compatibile con la richiesta dell'utente.
+            
+                            Auto trovata: ${suggestedAnnuncio.titolo}
+                            Anno: ${suggestedAnnuncio.anno}
+                            Chilometraggio: ${suggestedAnnuncio.chilometraggio} km
+                            Carburante: ${suggestedAnnuncio.carburante}
+                            Cambio: ${suggestedAnnuncio.cambio}
+                            Potenza: ${suggestedAnnuncio.cv} CV
+                            Prezzo: €${suggestedAnnuncio.prezzo}
+                            
+                            Presenta questa auto in modo entusiasta e positivo all'utente.
+                            
+                            Messaggio originale dell'utente: "$userMessage"
+                            """
+                                        } else {
+                                            """NESSUN ANNUNCIO TROVATO: Non abbiamo auto che corrispondono alla richiesta dell'utente.
+                            
+                            Comunica all'utente che al momento non abbiamo annunci compatibili con la sua ricerca.
+                            Suggerisci di contattare un consulente o di modificare i criteri di ricerca.
+                            
+                            Messaggio originale dell'utente: "$userMessage"
+                            """
                         }
                     )
                 )
@@ -128,6 +147,10 @@ class ChatbotViewModel : ViewModel() {
     private val kmWords = listOf("km", "chilometri", "chilometraggio")
     private val userKmRegex = Regex("""(\d+(?:\.\d+)?)\s*(?:mila\s*)?(?:k?m|chilometr[io])""")
 
+    // NUOVE REGEX AGGIUNTE
+    private val yearRegex = Regex("""20\d{2}""") // Trova anni dal 2000 al 2099
+    private val priceRegex = Regex("""(\d+(?:\.\d+)?)\s*(?:euro|€|mila\s*euro)""") // Trova prezzi
+
     private fun findBestMatchingAnnuncio(userMessage: String): Annuncio? {
         if (availableAnnunci.isEmpty()) return null
 
@@ -138,10 +161,9 @@ class ChatbotViewModel : ViewModel() {
 
         for (annuncio in availableAnnunci) {
             var score = 0
-            val annuncioText = "${annuncio.titolo} ${annuncio.descrizione}".lowercase()
-
-            // Scoring per parole generiche
-            val userWords = userLower.split(" ").filter { it.length >= 3 }
+            val annuncioText = "${annuncio.titolo} ${annuncio.descrizione} ${annuncio.anno} ${annuncio.chilometraggio} ${annuncio.carburante} ${annuncio.cambio} ${annuncio.cv} ${annuncio.prezzo}".lowercase()
+            // Scoring per parole generiche - MIGLIORATO: rimossa restrizione lunghezza
+            val userWords = userLower.split(Regex("\\s+")).filter { it.isNotEmpty() && it != "del" && it != "di" && it != "con" }
             userWords.forEach { word ->
                 if (annuncioText.contains(word)) {
                     score += 2
@@ -177,12 +199,48 @@ class ChatbotViewModel : ViewModel() {
                 }
             }
 
+            //  Matching degli anni
+            val userYears = yearRegex.findAll(userLower).map { it.value.toInt() }.toList()
+            userYears.forEach { year ->
+                if (annuncio.anno == year) {
+                    score += 6 // Bonus alto per anno esatto
+                } else if (kotlin.math.abs(annuncio.anno - year) <= 1) {
+                    score += 3 // Bonus medio per anni vicini (±1 anno)
+                }
+            }
+
+            //Matching del prezzo
+            val priceMatches = priceRegex.findAll(userLower)
+            priceMatches.forEach { match ->
+                val priceValue = match.groupValues[1].toDoubleOrNull()
+                if (priceValue != null) {
+                    val actualPrice = if (userLower.contains("mila")) (priceValue * 1000) else priceValue
+
+                    // Verifica se l'annuncio ha un prezzo compatibile (con margine del 20%)
+                    val priceDifference = kotlin.math.abs(annuncio.prezzo - actualPrice)
+                    val priceMargin = actualPrice * 0.2
+
+                    if (priceDifference <= priceMargin) {
+                        score += 4 // Bonus per prezzo compatibile
+                    }
+                }
+            }
+
+            //Bonus per match esatti di parole chiave importanti
+            if (userLower.contains("usata") && annuncioText.contains("usata")) {
+                score += 2
+            }
+            if (userLower.contains("nuova") && annuncioText.contains("nuova")) {
+                score += 2
+            }
+
             if (score > bestScore) {
                 bestScore = score
                 bestMatch = annuncio
             }
         }
 
+        // MIGLIORAMENTO: Soglia più bassa per essere meno restrittivi
         return if (bestScore >= 2) bestMatch else null
     }
 
@@ -194,19 +252,24 @@ class ChatbotViewModel : ViewModel() {
         val systemMessage = Message(
             role = "system",
             content = """Sei un assistente virtuale professionale di un concessionario auto italiano. 
-                Le tue caratteristiche:
-                - Rispondi sempre in italiano
-                - Sei cordiale, professionale e competente
-                - Aiuti i clienti con domande su auto, finanziamenti, assicurazioni, manutenzione
-                - Puoi fornire consigli per l'acquisto di auto nuove e usate
-                - Conosci le principali marche automobilistiche e i loro modelli
-                - Mantieni le risposte concise ma informative (max 200 parole)
-                - Quando suggerisci un'auto specifica, concludi sempre con "Ti mostro un'auto che potrebbe interessarti!" SOLO se disponibile nel nostro inventario
-                - Se non l'abbiamo nell'inventario allora rispondi con "Non abbiamo annunci compatibili con la tua richiesta"
-                - Se invece abbiamo qualcosa di simile come la stessa marca ma non compatibile con il prezzo richiesto allora proponi un'alternativa.
-                - Se non sai qualcosa, ammettilo onestamente e suggerisci di parlare con un consulente
-                - Mantieni la conversazione. Se l'utente di saluta o non ti chiede niente di pertinente continua la conversazione dicendo di chiederti qualcosa.
-            """
+            Le tue caratteristiche:
+            - Rispondi sempre in italiano
+            - Sei cordiale, professionale e competente
+            - Aiuti i clienti con domande su auto, finanziamenti, assicurazioni, manutenzione
+            - Puoi fornire consigli per l'acquisto di auto nuove e usate
+            - Conosci le principali marche automobilistiche e i loro modelli
+            - Mantieni le risposte concise ma informative (max 200 parole)
+            
+            IMPORTANTE - Comportamento per suggerimenti auto:
+            - Se ti viene comunicato che è stato trovato un annuncio specifico, presentalo SEMPRE come una soluzione positiva
+            - Usa frasi come "Perfetto! Ho trovato esattamente quello che cerchi" o "Abbiamo questa fantastica auto che fa al caso tuo"
+            - Quando suggerisci un'auto specifica disponibile, concludi sempre con "Ti mostro l'auto che abbiamo trovato!"
+            - SOLO se ti viene esplicitamente comunicato che non ci sono annunci compatibili, allora rispondi "Mi dispiace, al momento non abbiamo annunci che corrispondono esattamente alla tua ricerca"
+            - Se l'auto trovata è simile ma non esattamente quella richiesta, presentala comunque positivamente: "Ho trovato questa interessante alternativa che potrebbe piacerti"
+            
+            - Se non sai qualcosa, ammettilo onestamente e suggerisci di parlare con un consulente
+            - Mantieni la conversazione. Se l'utente ti saluta o non ti chiede niente di pertinente continua la conversazione dicendo di chiederti qualcosa.
+        """
         )
 
         val conversationMessages = conversationHistory.takeLast(8).map { chatMessage ->
@@ -218,7 +281,6 @@ class ChatbotViewModel : ViewModel() {
 
         return listOf(systemMessage) + conversationMessages
     }
-
     fun setAnnunci(annunci: List<Annuncio>) {
         availableAnnunci = annunci
     }
