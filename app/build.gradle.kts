@@ -75,7 +75,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.firebaseui:firebase-ui-auth:9.0.0")
 
-    // Retrofit for network calls
+    // Retrofit per OpenAI
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     
@@ -96,4 +96,7 @@ dependencies {
 
     // Per gestire le immagini
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // Per gestire il chatbot
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     }

@@ -11,7 +11,7 @@
         android:id="@+id/textView_title_profilo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="16dp"
         android:text="Il tuo profilo"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"

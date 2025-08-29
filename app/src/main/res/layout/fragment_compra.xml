@@ -11,7 +11,7 @@
         android:id="@+id/textView_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="16dp"
         android:text="Trova la tua prossima auto"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_title"
-        app:queryHint="Cerca per marca o modello..."/>
+        app:queryHint="Cerca per marca o modello..." />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_annunci"
@@ -50,8 +50,6 @@
         app:layout_constraintTop_toBottomOf="@+id/searchView_compra"
         tools:listitem="@layout/item_annuncio" />
 
-
-
     <TextView
         android:id="@+id/messageTextView"
         android:layout_width="0dp"
@@ -67,4 +65,112 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView_compra"
         tools:text="Messaggio informativo" />
+
+    <!-- Floating Action Button per il Chatbot -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_chatbot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="100dp"
+        android:src="@drawable/ic_chatbot"
+        app:backgroundTint="@color/colorPrimary"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Container per la Chat -->
+    <LinearLayout
+        android:id="@+id/chat_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="100dp"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_title">
+
+        <!-- Header della Chat -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp">
+
+            <ImageButton
+                android:id="@+id/button_close_chat"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_remove"
+                app:tint="@android:color/white" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Assistente AI"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+        <!-- RecyclerView per i messaggi -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_chat"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#f5f5f5" />
+
+        <!-- Progress Bar per il caricamento -->
+        <ProgressBar
+            android:id="@+id/progressBar_chat"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:visibility="gone" />
+
+        <!-- Input per i messaggi -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:elevation="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <EditText
+                android:id="@+id/editText_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:background="@color/white_alpha_80"
+                android:hint="Scrivi un messaggio..."
+                android:maxLines="3"
+                android:padding="12dp" />
+
+            <ImageButton
+                android:id="@+id/button_send_message"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@color/colorPrimaryDark"
+                android:src="@drawable/ic_send"
+                app:tint="@android:color/white" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

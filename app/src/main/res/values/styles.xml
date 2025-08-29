@@ -56,13 +56,13 @@
 
     <!-- Testo attivo bottom nav -->
     <style name="ModernBottomNavTextActive">
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Testo inattivo bottom nav -->
     <style name="ModernBottomNavTextInactive">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 

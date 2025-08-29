@@ -83,7 +83,7 @@ class CreaAnnuncioViewModel : ViewModel() {
     fun generaDescrizione(datiAuto: Map<String, String>) {
         val prompt = """
         Sei un venditore non esperto che vuole scrivere una descrizione oggettiva della tua macchina usata. Genera una descrizione di massimo 150 caratteri accattivante e professionale per un annuncio di vendita online in italiano.
-        Includi i dettagli chiave in modo naturale nel testo. Non usare elenchi puntati.
+        Includi i dettagli chiave in modo naturale nel testo. Non usare elenchi puntati. Specifica sempre se si tratta di un suv, sportiva, familiare ect.
 
         Dati Auto:
         - Modello: ${datiAuto["titolo"]}

@@ -24,7 +24,7 @@
         android:layout_margin="4dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Rimuovi foto"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/ic_remove"
         android:scaleType="fitCenter"
         app:tint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
