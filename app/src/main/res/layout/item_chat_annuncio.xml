@@ -15,7 +15,7 @@
         android:maxWidth="280dp"
         android:orientation="vertical"
         android:padding="12dp"
-        android:background="@color/colorAccent"
+        android:background="@color/bg_bot_message"
         android:layout_gravity="start"
         android:layout_marginBottom="8dp">
 
@@ -87,7 +87,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:background="@drawable/bg_annuncio">
+                android:background="@color/bg_bot_message">
 
                 <TextView
                     android:id="@+id/titoloAnnuncioTextView"

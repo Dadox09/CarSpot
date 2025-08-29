@@ -107,26 +107,25 @@ class ChatAdapter(private val onAnnuncioClick: (Annuncio) -> Unit) : RecyclerVie
                 textViewMessage.text = message.content
                 textViewTimestamp.text = dateFormat.format(Date(message.timestamp))
 
-                // Esegui il cast a LayoutParams del contenitore padre (es. FrameLayout)
                 val layoutParams = containerMessage.layoutParams as LinearLayout.LayoutParams
 
                 if (message.isUser) {
-                    // Messaggio utente: allineato a destra
+                    // Messaggio utente
                     containerMessage.setBackgroundResource(
                         com.example.concessionarioapp.R.drawable.bg_user_message
                     )
-                    layoutParams.gravity = Gravity.END // Allinea il contenitore a destra
-                    layoutParams.marginStart = 100 // Margine minimo a sinistra per evitare che si estenda troppo
-                    layoutParams.marginEnd = 16   // Margine dal bordo destro
+                    layoutParams.gravity = Gravity.END
+                    layoutParams.marginStart = 100
+                    layoutParams.marginEnd = 16
 
                 } else {
-                    // Messaggio bot: allineato a sinistra
+                    // Messaggio bot
                     containerMessage.setBackgroundResource(
-                        com.example.concessionarioapp.R.color.colorAccent
+                        com.example.concessionarioapp.R.color.bg_bot_message
                     )
-                    layoutParams.gravity = Gravity.START // Allinea il contenitore a sinistra
-                    layoutParams.marginStart = 16   // Margine dal bordo sinistro
-                    layoutParams.marginEnd = 100 // Margine minimo a destra
+                    layoutParams.gravity = Gravity.START
+                    layoutParams.marginStart = 16
+                    layoutParams.marginEnd = 100
                 }
 
                 containerMessage.layoutParams = layoutParams
