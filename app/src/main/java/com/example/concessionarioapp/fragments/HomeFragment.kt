@@ -67,8 +67,11 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_vendiFragment)
         }
 
-        binding.profiloCard.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_profiloFragment)
+        binding.chatbotCard.setOnClickListener {
+            val bundle = Bundle().apply {
+                putBoolean("openChatbot", true)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_compraFragment, bundle)
         }
     }
 

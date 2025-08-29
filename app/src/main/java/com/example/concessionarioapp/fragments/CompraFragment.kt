@@ -50,6 +50,10 @@ class CompraFragment : Fragment() {
         observeChatbotViewModel()
 
         viewModel.caricaAnnunci() // Carica tutti gli annunci
+
+        if (arguments?.getBoolean("openChatbot") == true) {
+            toggleChatbot()
+        }
     }
 
     private fun setupRecyclerView() {

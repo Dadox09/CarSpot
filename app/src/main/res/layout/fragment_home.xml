@@ -213,9 +213,9 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Profilo Card -->
+            <!-- chatbot Card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/profiloCard"
+                android:id="@+id/chatbotCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -231,7 +231,7 @@
                     android:padding="24dp">
 
                     <View
-                        android:id="@+id/profiloIndicator"
+                        android:id="@+id/chatbotIndicator"
                         android:layout_width="4dp"
                         android:layout_height="48dp"
                         android:background="@drawable/indicator_gradient_orange"
@@ -239,43 +239,43 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/profiloIcon"
+                        android:id="@+id/chatbotIcon"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_marginStart="16dp"
                         android:background="@drawable/circle_background_orange"
-                        android:contentDescription="Icona profilo"
+                        android:contentDescription="Icona chatbot"
                         android:padding="12dp"
-                        android:src="@drawable/ic_profile"
+                        android:src="@drawable/ic_chatbot"
                         app:tint="@android:color/white"
-                        app:layout_constraintStart_toEndOf="@+id/profiloIndicator"
+                        app:layout_constraintStart_toEndOf="@+id/chatbotIndicator"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/profiloTitleTextView"
+                        android:id="@+id/chatbotTitleTextView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:text="Il tuo profilo"
+                        android:text="Chiedi a CarBot"
                         android:textColor="@color/text_primary"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/profiloIcon"
-                        app:layout_constraintTop_toTopOf="@+id/profiloIcon" />
+                        app:layout_constraintStart_toEndOf="@+id/chatbotIcon"
+                        app:layout_constraintTop_toTopOf="@+id/chatbotIcon" />
 
                     <TextView
-                        android:id="@+id/profiloDescTextView"
+                        android:id="@+id/chatbotDescTextView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:text="Gestisci le tue informazioni"
+                        android:text="Lasciati aiutare dal nostro chatbot"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/profiloIcon"
+                        app:layout_constraintBottom_toBottomOf="@+id/chatbotIcon"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/profiloIcon"
-                        app:layout_constraintTop_toBottomOf="@+id/profiloTitleTextView" />
+                        app:layout_constraintStart_toEndOf="@+id/chatbotIcon"
+                        app:layout_constraintTop_toBottomOf="@+id/chatbotTitleTextView" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>

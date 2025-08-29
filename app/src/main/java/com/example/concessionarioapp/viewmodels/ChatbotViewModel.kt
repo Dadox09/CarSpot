@@ -116,6 +116,18 @@ class ChatbotViewModel : ViewModel() {
         _error.value = errorMessage
     }
 
+    private val commonBrands = listOf(
+        "fiat", "ford", "bmw", "mercedes", "audi", "volkswagen", "toyota",
+        "honda", "nissan", "renault", "peugeot", "citroen", "opel", "kia",
+        "hyundai", "alfa romeo", "jeep", "land rover", "porsche", "ferrari",
+        "lamborghini", "maserati", "tesla", "subaru", "mazda", "lexus",
+        "mini", "skoda", "seat", "volvo", "smart", "dacia", "mitsubishi"
+    )
+
+    private val fuelTypes = listOf("diesel", "benzina", "elettrica", "ibrida", "gasolio")
+    private val kmWords = listOf("km", "chilometri", "chilometraggio")
+    private val userKmRegex = Regex("""(\d+(?:\.\d+)?)\s*(?:mila\s*)?(?:k?m|chilometr[io])""")
+
     private fun findBestMatchingAnnuncio(userMessage: String): Annuncio? {
         if (availableAnnunci.isEmpty()) return null
 
@@ -128,7 +140,7 @@ class ChatbotViewModel : ViewModel() {
             var score = 0
             val annuncioText = "${annuncio.titolo} ${annuncio.descrizione}".lowercase()
 
-            // Scoring logic remains the same
+            // Scoring per parole generiche
             val userWords = userLower.split(" ").filter { it.length >= 3 }
             userWords.forEach { word ->
                 if (annuncioText.contains(word)) {
@@ -136,20 +148,29 @@ class ChatbotViewModel : ViewModel() {
                 }
             }
 
-            val commonBrands = listOf(
-                "fiat", "ford", "bmw", "mercedes", "audi", "volkswagen", "toyota",
-                "honda", "nissan", "renault", "peugeot", "citroen", "opel", "kia",
-                "hyundai", "alfa romeo", "jeep", "land rover", "porsche", "ferrari",
-                "lamborghini", "maserati", "tesla", "subaru", "mazda", "lexus",
-                "mini", "skoda", "seat", "volvo", "smart", "dacia", "mitsubishi"
-            )
+            // Logica chilometri
+            val hasKmReference = kmWords.any { userLower.contains(it) && annuncioText.contains(it) }
+            if (hasKmReference) {
+                val match = userKmRegex.find(userLower)
+                if (match != null) {
+                    val kmValue = match.groupValues[1].toDoubleOrNull()
+                    if (kmValue != null) {
+                        val actualKm = if (userLower.contains("mila")) (kmValue * 1000).toInt() else kmValue.toInt()
+                        if (annuncio.chilometraggio <= actualKm) {
+                            score += 5
+                        }
+                    }
+                }
+            }
+
+            // Logica brand
             commonBrands.forEach { brand ->
                 if (userLower.contains(brand) && annuncioText.contains(brand)) {
                     score += 5
                 }
             }
 
-            val fuelTypes = listOf("diesel", "benzina", "elettrica", "ibrida", "gasolio")
+            // Logica carburante
             fuelTypes.forEach { fuel ->
                 if (userLower.contains(fuel) && annuncioText.contains(fuel)) {
                     score += 3
@@ -162,7 +183,7 @@ class ChatbotViewModel : ViewModel() {
             }
         }
 
-        if (bestScore >= 2) return bestMatch else return null
+        return if (bestScore >= 2) bestMatch else null
     }
 
     fun clearError() {
