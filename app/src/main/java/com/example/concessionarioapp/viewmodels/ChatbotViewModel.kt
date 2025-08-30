@@ -40,7 +40,7 @@ class ChatbotViewModel : ViewModel() {
     init {
         // Messaggio di benvenuto
         val welcomeMessage = ChatMessage(
-            content = "Ciao! Sono il tuo assistente virtuale per il concessionario. Come posso aiutarti oggi? Posso rispondere a domande sulle auto che desideri comprare!",
+            content = "Ciao! Sono CarBot il tuo assistente virtuale per l'acquisto della tua prossima auto. Che tipo di auto stai cercando?",
             isUser = false
         )
         conversationHistory.add(welcomeMessage)
@@ -66,28 +66,29 @@ class ChatbotViewModel : ViewModel() {
                     Message(
                         role = "user",
                         content = if (suggestedAnnuncio != null) {
-                            """ANNUNCIO TROVATO: Ho trovato un'auto compatibile con la richiesta dell'utente.
-            
-                            Auto trovata: ${suggestedAnnuncio.titolo}
-                            Anno: ${suggestedAnnuncio.anno}
-                            Chilometraggio: ${suggestedAnnuncio.chilometraggio} km
-                            Carburante: ${suggestedAnnuncio.carburante}
-                            Cambio: ${suggestedAnnuncio.cambio}
-                            Potenza: ${suggestedAnnuncio.cv} CV
-                            Prezzo: €${suggestedAnnuncio.prezzo}
+                                """
+                                    ANNUNCIO TROVATO: Ho trovato un'auto compatibile con la richiesta dell'utente.
+                    
+                                    Auto trovata: ${suggestedAnnuncio.titolo}
+                                    Anno: ${suggestedAnnuncio.anno}
+                                    Chilometraggio: ${suggestedAnnuncio.chilometraggio} km
+                                    Carburante: ${suggestedAnnuncio.carburante}
+                                    Cambio: ${suggestedAnnuncio.cambio}
+                                    Potenza: ${suggestedAnnuncio.cv} CV
+                                    Prezzo: €${suggestedAnnuncio.prezzo}
+                                    
+                                    Presenta questa auto in modo entusiasta e positivo all'utente.
+                                    
+                                    Messaggio originale dell'utente: "$userMessage"
+                                """
+                            } else {
+                                    """NESSUN ANNUNCIO TROVATO: Non abbiamo auto che corrispondono alla richiesta dell'utente.
                             
-                            Presenta questa auto in modo entusiasta e positivo all'utente.
-                            
-                            Messaggio originale dell'utente: "$userMessage"
-                            """
-                                        } else {
-                                            """NESSUN ANNUNCIO TROVATO: Non abbiamo auto che corrispondono alla richiesta dell'utente.
-                            
-                            Comunica all'utente che al momento non abbiamo annunci compatibili con la sua ricerca.
-                            Suggerisci di contattare un consulente o di modificare i criteri di ricerca.
-                            
-                            Messaggio originale dell'utente: "$userMessage"
-                            """
+                                    Comunica all'utente che al momento non abbiamo annunci compatibili con la sua ricerca.
+                                    Suggerisci di contattare un consulente o di modificare i criteri di ricerca.
+                                                
+                                    Messaggio originale dell'utente: "$userMessage"
+                                    """
                         }
                     )
                 )
@@ -147,7 +148,6 @@ class ChatbotViewModel : ViewModel() {
     private val kmWords = listOf("km", "chilometri", "chilometraggio")
     private val userKmRegex = Regex("""(\d+(?:\.\d+)?)\s*(?:mila\s*)?(?:k?m|chilometr[io])""")
 
-    // NUOVE REGEX AGGIUNTE
     private val yearRegex = Regex("""20\d{2}""") // Trova anni dal 2000 al 2099
     private val priceRegex = Regex("""(\d+(?:\.\d+)?)\s*(?:euro|€|mila\s*euro)""") // Trova prezzi
 
@@ -162,7 +162,7 @@ class ChatbotViewModel : ViewModel() {
         for (annuncio in availableAnnunci) {
             var score = 0
             val annuncioText = "${annuncio.titolo} ${annuncio.descrizione} ${annuncio.anno} ${annuncio.chilometraggio} ${annuncio.carburante} ${annuncio.cambio} ${annuncio.cv} ${annuncio.prezzo}".lowercase()
-            // Scoring per parole generiche - MIGLIORATO: rimossa restrizione lunghezza
+            // Scoring per parole generiche
             val userWords = userLower.split(Regex("\\s+")).filter { it.isNotEmpty() && it != "del" && it != "di" && it != "con" }
             userWords.forEach { word ->
                 if (annuncioText.contains(word)) {
@@ -216,12 +216,10 @@ class ChatbotViewModel : ViewModel() {
                 if (priceValue != null) {
                     val actualPrice = if (userLower.contains("mila")) (priceValue * 1000) else priceValue
 
-                    // Verifica se l'annuncio ha un prezzo compatibile (con margine del 20%)
-                    val priceDifference = kotlin.math.abs(annuncio.prezzo - actualPrice)
-                    val priceMargin = actualPrice * 0.2
-
-                    if (priceDifference <= priceMargin) {
+                    if (annuncio.prezzo <= actualPrice) {
                         score += 4 // Bonus per prezzo compatibile
+                    }else if (kotlin.math.abs(annuncio.prezzo - actualPrice) <= 1000) {
+                        score += 2 // Bonus medio per prezzo vicino
                     }
                 }
             }
@@ -259,6 +257,7 @@ class ChatbotViewModel : ViewModel() {
             - Puoi fornire consigli per l'acquisto di auto nuove e usate
             - Conosci le principali marche automobilistiche e i loro modelli
             - Mantieni le risposte concise ma informative (max 200 parole)
+            - NO ELENCHI PUNTATI
             
             IMPORTANTE - Comportamento per suggerimenti auto:
             - Se ti viene comunicato che è stato trovato un annuncio specifico, presentalo SEMPRE come una soluzione positiva
