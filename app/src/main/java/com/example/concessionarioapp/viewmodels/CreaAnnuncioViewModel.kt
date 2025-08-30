@@ -85,6 +85,9 @@ class CreaAnnuncioViewModel : ViewModel() {
         Sei un venditore non esperto che vuole scrivere una descrizione oggettiva della tua macchina usata. Genera una descrizione di massimo 150 caratteri accattivante e professionale per un annuncio di vendita online in italiano.
         Includi i dettagli chiave in modo naturale nel testo. Non usare elenchi puntati. Specifica sempre se si tratta di un suv, sportiva, familiare ect.
         Scrivi in prima persona singolare.
+        Nel testo inserisci sempre se si tratta di una di queste categorie: "suv", "sportiva", "berlina", "station", "wagon", "sw",
+        "citycar", "utilitaria", "crossover", "cabrio", "coupe",
+        "familiare", "monovolume"
         Dati Auto:
         - Modello: ${datiAuto["titolo"]}
         - Anno: ${datiAuto["anno"]}

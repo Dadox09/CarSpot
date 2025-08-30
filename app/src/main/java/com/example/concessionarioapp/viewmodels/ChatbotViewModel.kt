@@ -60,35 +60,73 @@ class ChatbotViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val suggestedAnnuncio = findBestMatchingAnnuncio(userMessage)
+                val matchResult = findBestMatchingAnnuncio(userMessage)
 
                 val updatedMessages = buildApiMessages() + listOf(
                     Message(
                         role = "user",
-                        content = if (suggestedAnnuncio != null) {
+                        content = when (matchResult.matchQuality) {
+                            MatchQuality.EXCELLENT -> {
                                 """
-                                    ANNUNCIO TROVATO: Ho trovato un'auto compatibile con la richiesta dell'utente.
-                    
-                                    Auto trovata: ${suggestedAnnuncio.titolo}
-                                    Anno: ${suggestedAnnuncio.anno}
-                                    Chilometraggio: ${suggestedAnnuncio.chilometraggio} km
-                                    Carburante: ${suggestedAnnuncio.carburante}
-                                    Cambio: ${suggestedAnnuncio.cambio}
-                                    Potenza: ${suggestedAnnuncio.cv} CV
-                                    Prezzo: €${suggestedAnnuncio.prezzo}
-                                    
-                                    Presenta questa auto in modo entusiasta e positivo all'utente.
-                                    
-                                    Messaggio originale dell'utente: "$userMessage"
+                                MATCH PERFETTO: Ho trovato un'auto che corrisponde ESATTAMENTE alla richiesta dell'utente.
+                
+                                Auto trovata: ${matchResult.annuncio!!.titolo}
+                                Anno: ${matchResult.annuncio.anno}
+                                Chilometraggio: ${matchResult.annuncio.chilometraggio} km
+                                Carburante: ${matchResult.annuncio.carburante}
+                                Cambio: ${matchResult.annuncio.cambio}
+                                Potenza: ${matchResult.annuncio.cv} CV
+                                Prezzo: €${matchResult.annuncio.prezzo}
+                                
+                                Presenta questa auto in modo entusiasta perché corrisponde perfettamente alla richiesta.
+                                
+                                Messaggio originale dell'utente: "$userMessage"
                                 """
-                            } else {
-                                    """NESSUN ANNUNCIO TROVATO: Non abbiamo auto che corrispondono alla richiesta dell'utente.
-                            
-                                    Comunica all'utente che al momento non abbiamo annunci compatibili con la sua ricerca.
-                                    Suggerisci di contattare un consulente o di modificare i criteri di ricerca.
-                                                
-                                    Messaggio originale dell'utente: "$userMessage"
-                                    """
+                            }
+                            MatchQuality.GOOD -> {
+                                """
+                                MATCH BUONO: Ho trovato un'auto simile ma non identica alla richiesta dell'utente.
+                
+                                Auto trovata: ${matchResult.annuncio!!.titolo}
+                                Anno: ${matchResult.annuncio.anno}
+                                Chilometraggio: ${matchResult.annuncio.chilometraggio} km
+                                Carburante: ${matchResult.annuncio.carburante}
+                                Cambio: ${matchResult.annuncio.cambio}
+                                Potenza: ${matchResult.annuncio.cv} CV
+                                Prezzo: €${matchResult.annuncio.prezzo}
+                                
+                                Spiega chiaramente che non è esattamente quello che cercava, ma proponi questa alternativa valida.
+                                
+                                Messaggio originale dell'utente: "$userMessage"
+                                """
+                            }
+                            MatchQuality.POOR -> {
+                                """
+                                MATCH SCARSO: Ho trovato un'auto ma non è molto simile a quello che cerca l'utente.
+                
+                                Auto trovata: ${matchResult.annuncio!!.titolo}
+                                Anno: ${matchResult.annuncio.anno}
+                                Chilometraggio: ${matchResult.annuncio.chilometraggio} km
+                                Carburante: ${matchResult.annuncio.carburante}
+                                Cambio: ${matchResult.annuncio.cambio}
+                                Potenza: ${matchResult.annuncio.cv} CV
+                                Prezzo: €${matchResult.annuncio.prezzo}
+                                
+                                Sii onesto: ammetti che non è quello che cercava, ma proponi questa come opzione disponibile.
+                                
+                                Messaggio originale dell'utente: "$userMessage"
+                                """
+                            }
+                            MatchQuality.NONE -> {
+                                """
+                                NESSUN MATCH: Non abbiamo auto che corrispondono alla richiesta dell'utente.
+                        
+                                Comunica onestamente che al momento non abbiamo quello che cerca.
+                                Suggerisci di contattare un consulente o di modificare i criteri di ricerca.
+                                            
+                                Messaggio originale dell'utente: "$userMessage"
+                                """
+                            }
                         }
                     )
                 )
@@ -107,11 +145,10 @@ class ChatbotViewModel : ViewModel() {
                     val botMessage = aiResponse?.choices?.firstOrNull()?.message?.content
                         ?: "Mi dispiace, non sono riuscito a elaborare la tua richiesta."
 
-                    //Crea il messaggio del bot con l'annuncio già trovato
                     val botChatMessage = ChatMessage(
                         content = botMessage.trim(),
                         isUser = false,
-                        annuncio = suggestedAnnuncio
+                        annuncio = matchResult.annuncio
                     )
                     conversationHistory.add(botChatMessage)
                     _messages.value = conversationHistory.toList()
@@ -136,42 +173,64 @@ class ChatbotViewModel : ViewModel() {
         _error.value = errorMessage
     }
 
-    private val commonBrands = listOf(
-        "fiat", "ford", "bmw", "mercedes", "audi", "volkswagen", "toyota",
-        "honda", "nissan", "renault", "peugeot", "citroen", "opel", "kia",
-        "hyundai", "alfa romeo", "jeep", "land rover", "porsche", "ferrari",
-        "lamborghini", "maserati", "tesla", "subaru", "mazda", "lexus",
-        "mini", "skoda", "seat", "volvo", "smart", "dacia", "mitsubishi"
+    enum class MatchQuality {
+        EXCELLENT,  // Match perfetto
+        GOOD,       // Match buono ma non perfetto
+        POOR,       // Match scarso
+        NONE        // Nessun match
+    }
+
+    data class MatchResult(
+        val annuncio: Annuncio?,
+        val matchQuality: MatchQuality,
+        val score: Int
     )
 
     private val fuelTypes = listOf("diesel", "benzina", "elettrica", "ibrida", "gasolio")
     private val kmWords = listOf("km", "chilometri", "chilometraggio")
     private val userKmRegex = Regex("""(\d+(?:\.\d+)?)\s*(?:mila\s*)?(?:k?m|chilometr[io])""")
+    private val yearRegex = Regex("""20\d{2}""")
+    private val priceRegex = Regex("""(\d+(?:\.\d+)?)\s*(?:euro|€|mila\s*euro)""")
 
-    private val yearRegex = Regex("""20\d{2}""") // Trova anni dal 2000 al 2099
-    private val priceRegex = Regex("""(\d+(?:\.\d+)?)\s*(?:euro|€|mila\s*euro)""") // Trova prezzi
+    // Categorie di auto che spesso appaiono nelle descrizioni
+    private val carCategories = listOf("suv", "sportiva", "berlina", "station", "wagon", "sw",
+        "citycar", "utilitaria", "crossover", "cabrio", "coupe",
+        "familiare", "monovolume", "pickup")
 
-    private fun findBestMatchingAnnuncio(userMessage: String): Annuncio? {
-        if (availableAnnunci.isEmpty()) return null
+    private fun findBestMatchingAnnuncio(userMessage: String): MatchResult {
+        if (availableAnnunci.isEmpty()) {
+            return MatchResult(null, MatchQuality.NONE, 0)
+        }
 
         val userLower = userMessage.lowercase()
-
         var bestMatch: Annuncio? = null
         var bestScore = 0
 
         for (annuncio in availableAnnunci) {
             var score = 0
-            val annuncioText = "${annuncio.titolo} ${annuncio.descrizione} ${annuncio.anno} ${annuncio.chilometraggio} ${annuncio.carburante} ${annuncio.cambio} ${annuncio.cv} ${annuncio.prezzo}".lowercase()
-            // Scoring per parole generiche
-            val userWords = userLower.split(Regex("\\s+")).filter { it.isNotEmpty() && it != "del" && it != "di" && it != "con" }
+            val titoloLower = annuncio.titolo.lowercase()
+            val descrizioneText = "${annuncio.descrizione} ${annuncio.anno} ${annuncio.chilometraggio} ${annuncio.carburante} ${annuncio.cambio} ${annuncio.cv} ${annuncio.prezzo}".lowercase()
+
+            // LOGICA PRINCIPALE: Parole nel titolo valgono MOLTO di più
+            val userWords = userLower.split(Regex("\\s+")).filter {
+                it.isNotEmpty() && it != "del" && it != "di" && it != "con" &&
+                        it != "una" && it != "un" && it != "che" && it != "auto" &&
+                        it.length > 2
+            }
+
             userWords.forEach { word ->
-                if (annuncioText.contains(word)) {
-                    score += 2
+                when {
+                    // Parola nel titolo = punteggio alto
+                    titoloLower.contains(word) -> score += 15
+                    // Se è una categoria di auto e appare nella descrizione = punteggio alto
+                    carCategories.contains(word) && descrizioneText.contains(word) -> score += 12
+                    // Parola nella descrizione/altre info = punteggio basso
+                    descrizioneText.contains(word) -> score += 2
                 }
             }
 
-            // Logica chilometri
-            val hasKmReference = kmWords.any { userLower.contains(it) && annuncioText.contains(it) }
+            // LOGICA CHILOMETRI
+            val hasKmReference = kmWords.any { userLower.contains(it) }
             if (hasKmReference) {
                 val match = userKmRegex.find(userLower)
                 if (match != null) {
@@ -179,57 +238,50 @@ class ChatbotViewModel : ViewModel() {
                     if (kmValue != null) {
                         val actualKm = if (userLower.contains("mila")) (kmValue * 1000).toInt() else kmValue.toInt()
                         if (annuncio.chilometraggio <= actualKm) {
+                            score += 10
+                        } else if (kotlin.math.abs(annuncio.chilometraggio - actualKm) <= 20000) {
                             score += 5
                         }
                     }
                 }
             }
 
-            // Logica brand
-            commonBrands.forEach { brand ->
-                if (userLower.contains(brand) && annuncioText.contains(brand)) {
-                    score += 5
-                }
-            }
-
-            // Logica carburante
+            // LOGICA CARBURANTE
             fuelTypes.forEach { fuel ->
-                if (userLower.contains(fuel) && annuncioText.contains(fuel)) {
-                    score += 3
+                if (userLower.contains(fuel) && (titoloLower.contains(fuel) || descrizioneText.contains(fuel))) {
+                    score += 8
                 }
             }
 
-            //  Matching degli anni
+            // LOGICA ANNI
             val userYears = yearRegex.findAll(userLower).map { it.value.toInt() }.toList()
             userYears.forEach { year ->
                 if (annuncio.anno == year) {
-                    score += 6 // Bonus alto per anno esatto
+                    score += 12
                 } else if (kotlin.math.abs(annuncio.anno - year) <= 1) {
-                    score += 3 // Bonus medio per anni vicini (±1 anno)
+                    score += 6
                 }
             }
 
-            //Matching del prezzo
+            // LOGICA PREZZO MIGLIORATA
             val priceMatches = priceRegex.findAll(userLower)
             priceMatches.forEach { match ->
                 val priceValue = match.groupValues[1].toDoubleOrNull()
                 if (priceValue != null) {
                     val actualPrice = if (userLower.contains("mila")) (priceValue * 1000) else priceValue
 
-                    if (annuncio.prezzo <= actualPrice) {
-                        score += 4 // Bonus per prezzo compatibile
-                    }else if (kotlin.math.abs(annuncio.prezzo - actualPrice) <= 1000) {
-                        score += 2 // Bonus medio per prezzo vicino
+                    // Controlla se l'utente vuole "meno di" o "sotto"
+                    val wantsLess = userLower.contains("meno di") || userLower.contains("sotto") ||
+                            userLower.contains("massimo") || userLower.contains("max")
+
+                    if (wantsLess && annuncio.prezzo <= actualPrice) {
+                        score += 12 // Bonus alto per prezzo che rispetta il limite
+                    } else if (!wantsLess && annuncio.prezzo <= actualPrice) {
+                        score += 8 // Bonus normale per prezzo compatibile
+                    } else if (!wantsLess && kotlin.math.abs(annuncio.prezzo - actualPrice) <= 2000) {
+                        score += 4 // Bonus per prezzo vicino
                     }
                 }
-            }
-
-            //Bonus per match esatti di parole chiave importanti
-            if (userLower.contains("usata") && annuncioText.contains("usata")) {
-                score += 2
-            }
-            if (userLower.contains("nuova") && annuncioText.contains("nuova")) {
-                score += 2
             }
 
             if (score > bestScore) {
@@ -238,8 +290,24 @@ class ChatbotViewModel : ViewModel() {
             }
         }
 
-        // MIGLIORAMENTO: Soglia più bassa per essere meno restrittivi
-        return if (bestScore >= 2) bestMatch else null
+        // Debug logging
+        bestMatch?.let { annuncio ->
+            println("DEBUG - Match trovato: ${annuncio.titolo}")
+            println("DEBUG - Score: $bestScore")
+            println("DEBUG - Richiesta utente: $userMessage")
+        }
+
+        // Determina la qualità del match con soglie corrette
+        val matchQuality = when {
+            bestScore == 0 -> MatchQuality.NONE
+            bestScore >= 25 -> MatchQuality.EXCELLENT  // Match perfetto con più criteri
+            bestScore >= 12 -> MatchQuality.EXCELLENT  // Match di una parola chiave nel titolo o categoria
+            bestScore >= 8 -> MatchQuality.GOOD        // Match decente
+            bestScore >= 5 -> MatchQuality.POOR        // Match scarso
+            else -> MatchQuality.NONE
+        }
+
+        return MatchResult(bestMatch, matchQuality, bestScore)
     }
 
     fun clearError() {
@@ -252,22 +320,31 @@ class ChatbotViewModel : ViewModel() {
             content = """Sei un assistente virtuale professionale di un concessionario auto italiano. 
             Le tue caratteristiche:
             - Rispondi sempre in italiano
-            - Sei cordiale, professionale e competente
+            - Sei cordiale, professionale e ONESTO
             - Aiuti i clienti con domande su auto, finanziamenti, assicurazioni, manutenzione
-            - Puoi fornire consigli per l'acquisto di auto nuove e usate
-            - Conosci le principali marche automobilistiche e i loro modelli
             - Mantieni le risposte concise ma informative (max 200 parole)
             - NO ELENCHI PUNTATI
             
-            IMPORTANTE - Comportamento per suggerimenti auto:
-            - Se ti viene comunicato che è stato trovato un annuncio specifico, presentalo SEMPRE come una soluzione positiva
-            - Usa frasi come "Perfetto! Ho trovato esattamente quello che cerchi" o "Abbiamo questa fantastica auto che fa al caso tuo"
-            - Quando suggerisci un'auto specifica disponibile, concludi sempre con "Ti mostro l'auto che abbiamo trovato!"
-            - SOLO se ti viene esplicitamente comunicato che non ci sono annunci compatibili, allora rispondi "Mi dispiace, al momento non abbiamo annunci che corrispondono esattamente alla tua ricerca"
-            - Se l'auto trovata è simile ma non esattamente quella richiesta, presentala comunque positivamente: "Ho trovato questa interessante alternativa che potrebbe piacerti"
+            IMPORTANTE - Comportamento ONESTO per suggerimenti auto:
             
-            - Se non sai qualcosa, ammettilo onestamente e suggerisci di parlare con un consulente
-            - Mantieni la conversazione. Se l'utente ti saluta o non ti chiede niente di pertinente continua la conversazione dicendo di chiederti qualcosa.
+            MATCH PERFETTO: Se l'auto corrisponde esattamente alla richiesta, sii entusiasta:
+            - "Perfetto! Ho trovato esattamente quello che cerchi!"
+            - Concludi con "Ti mostro l'auto che abbiamo trovato!"
+            
+            MATCH BUONO: Se l'auto è simile ma non identica, sii onesto ma positivo:
+            - "Non ho trovato esattamente quello che cercavi, ma ho questa interessante alternativa..."
+            - Spiega le differenze e i punti di forza dell'alternativa
+            
+            MATCH SCARSO: Se l'auto è molto diversa, sii completamente onesto:
+            - "Al momento non abbiamo quello che stai cercando, ma ho questa opzione disponibile..."
+            - Spiega chiaramente le differenze
+            - Suggerisci di contattare un consulente per altre opzioni
+            
+            NESSUN MATCH: Sii onesto e utile:
+            - "Mi dispiace, al momento non abbiamo annunci che corrispondono alla tua ricerca"
+            - Suggerisci di parlare con un consulente o di modificare i criteri
+            
+            NON mentire mai sulla corrispondenza tra richiesta e auto trovata!
         """
         )
 
@@ -280,6 +357,7 @@ class ChatbotViewModel : ViewModel() {
 
         return listOf(systemMessage) + conversationMessages
     }
+
     fun setAnnunci(annunci: List<Annuncio>) {
         availableAnnunci = annunci
     }
