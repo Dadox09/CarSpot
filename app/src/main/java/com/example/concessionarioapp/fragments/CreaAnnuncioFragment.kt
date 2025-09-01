@@ -129,16 +129,16 @@ class CreaAnnuncioFragment : Fragment() {
         //dropdown per il tipo di carburante
         val tipiCarburante = arrayOf("Benzina", "Diesel", "GPL", "Metano", "Elettrico", "Ibrido")
         val carburanteAdapter =
-            ArrayAdapter(requireContext(), R.layout.simple_dropdown_item_1line, tipiCarburante)
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, tipiCarburante)
         binding.carburanteAutoComplete.setAdapter(carburanteAdapter)
-        binding.carburanteAutoComplete.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        binding.carburanteAutoComplete.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
 
         //dropdown per il tipo di cambio
         val tipiCambio = arrayOf("Manuale", "Automatico", "Semiautomatico")
         val cambioAdapter =
-            ArrayAdapter(requireContext(), R.layout.simple_dropdown_item_1line, tipiCambio)
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, tipiCambio)
         binding.cambioAutoComplete.setAdapter(cambioAdapter)
-        binding.cambioAutoComplete.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        binding.cambioAutoComplete.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
     }
 
     private fun salvaAnnuncio() {

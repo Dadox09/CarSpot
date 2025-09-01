@@ -28,54 +28,77 @@ class CreaAnnuncioViewModel : ViewModel() {
 
     fun suggerisciPrezzo(datiAuto: Map<String, String>) {
         val prompt = """
-            Sei un analista esperto del mercato automobilistico italiano. Il tuo compito è eseguire una valutazione dettagliata di un'auto usata e produrre il risultato in formato JSON.
-            
-            **Analisi Richiesta:**
-            Effettua una valutazione passo-passo per determinare il prezzo di vendita più probabile tra privati.
-            
-            **Dati del Veicolo:**
-            - Modello Completo (incluso allestimento): ${datiAuto["titolo"]}
-            - Anno: ${datiAuto["anno"]}
-            - Chilometraggio: ${datiAuto["chilometraggio"]} km
-            - Carburante: ${datiAuto["carburante"]}
-            - Cambio: ${datiAuto["cambio"]}
-            - Cv: ${datiAuto["cv"]} cv
-            - Stato Generale (descrizione o voto 1-10): ${datiAuto["stato"]} // Dato cruciale
-            - Manutenzione (es. "regolare", "documentata"): ${datiAuto["manutenzione"]} // Dato utile
-            
-            **Procedura di Valutazione:**
-            1.  **Stima del Valore Base:** Inizia con il valore di mercato medio per un veicolo identico (modello, anno, allestimento) con chilometraggio standard.
-            2.  **Correzione Chilometraggio:** Applica un fattore di correzione negativo se il chilometraggio è superiore alla media di 15.000 km/anno, o positivo se è significativamente inferiore.
-            3.  **Correzione Condizioni:** Adegua il prezzo in base allo stato generale, alla manutenzione e alla presenza di eventuali danni o difetti.
-            4.  **Calcolo Prezzo Finale:** Calcola il prezzo finale consigliato.
-            
-            **Output:**
-            Rispondi **esclusivamente** con un oggetto JSON valido, senza testo prima o dopo. Il JSON deve avere la seguente struttura:
-            {
-              "ragionamento": "Una breve analisi testuale dei passaggi che hai seguito per arrivare al prezzo finale.",
-              "prezzo_consigliato": VALORE_NUMERICO_INTERO
-            }
-            
-            Esempio di output:
-            {
-              "ragionamento": "Partendo da una base di 16.000€ per una Golf del 2020, ho ridotto il valore di 1.500€ per il chilometraggio elevato e aggiunto 500€ per gli optional presenti, arrivando a un prezzo finale competitivo.",
-              "prezzo_consigliato": 15000
-            }
-            """
+        Sei un esperto valutatore di auto usate specializzato nel mercato italiano. Analizza i seguenti dati e fornisci una valutazione precisa del prezzo di vendita tra privati.
+        
+        **DATI VEICOLO:**
+        - Modello: ${datiAuto["titolo"]}
+        - Anno: ${datiAuto["anno"]}
+        - Chilometraggio: ${datiAuto["chilometraggio"]} km
+        - Carburante: ${datiAuto["carburante"]}
+        - Cambio: ${datiAuto["cambio"]}
+        - Potenza: ${datiAuto["cv"]} cv
+        - Manutenzione: ${datiAuto["manutenzione"]}
+        
+        **METODOLOGIA DI VALUTAZIONE:**
+        
+        1. **Valore Base di Mercato:**
+           - Consulta mentalmente i valori attuali di mercato per questo specifico modello/anno
+           - Considera la fascia di mercato (city car, utilitaria, berlina, SUV, premium)
+           - Tieni conto della popolarità e affidabilità del modello
+        
+        2. **Analisi Chilometraggio:**
+           - Media annuale: 12.000-15.000 km/anno
+           - Calcola l'età del veicolo: ${2024 - (datiAuto["anno"]?.toIntOrNull() ?: 2024)} anni
+           - Chilometraggio atteso: ${(2024 - (datiAuto["anno"]?.toIntOrNull() ?: 2024)) * 13500} km circa
+           - Applica correzioni: -3% ogni 10.000 km in eccesso, +2% ogni 10.000 km in difetto
+        
+        3. **Fattori di Motorizzazione:**
+           - Benzina: valore base
+           - Diesel: +5-10% se Euro 6, -10-15% se Euro 5 o inferiore
+           - GPL/Metano: -5% per età impianto, +8% per risparmio carburante
+           - Ibrido/Elettrico: valuta incentivi e deprezzamento batterie
+        
+        5. **Fattori di Mercato:**
+           - Considera stagionalità (cabrio in estate, 4WD in inverno)
+           - Valuta richiesta specifica del modello
+           - Applica trend di mercato attuale
+        
+        **IMPORTANTE:** 
+        - Sii realistico sui prezzi di mercato italiani 2024
+        - Considera che i privati vendono generalmente 5-10% sotto i concessionari
+        - Il prezzo deve essere competitivo per una vendita in tempi ragionevoli (2-3 mesi)
+        
+        Rispondi SOLO con questo JSON, senza altro testo:
+        {
+          "ragionamento": "Analisi dettagliata: valore base €X, chilometraggio [alto/nella media/basso] con correzione ±Y%, condizioni [ottime/buone/discrete] ±Z%, motorizzazione [vantaggi/svantaggi], prezzo finale competitivo per vendita privata",
+          "prezzo_consigliato": NUMERO_INTERO
+        }
+    """.trimIndent()
 
         eseguiChiamataAI(prompt) { response ->
             try {
-                // Esegui il parsing della risposta JSON
-                val jsonObject = org.json.JSONObject(response)
+                // Pulizia della risposta per rimuovere eventuali caratteri extra
+                val cleanResponse = response.trim()
+                    .removePrefix("```json")
+                    .removeSuffix("```")
+                    .trim()
+
+                val jsonObject = org.json.JSONObject(cleanResponse)
                 val prezzo = jsonObject.getInt("prezzo_consigliato")
 
-                // Aggiorna la UI con il valore numerico
-                _prezzoSuggerito.postValue(prezzo.toString())
+                // Validazione del prezzo (tra 500€ e 150.000€)
+                if (prezzo in 500..150000) {
+                    _prezzoSuggerito.postValue(prezzo.toString())
+                } else {
+                    _prezzoSuggerito.postValue("Errore: Prezzo non valido")
+                }
 
+            } catch (e: org.json.JSONException) {
+                // Errore di parsing JSON
+                _prezzoSuggerito.postValue("Errore di formato")
             } catch (e: Exception) {
-                // Gestisci eventuali errori di parsing
-                _prezzoSuggerito.postValue("Errore")
-                // Logga l'errore: e.printStackTrace()
+                // Altri errori
+                _prezzoSuggerito.postValue("Errore di valutazione")
             }
         }
     }
@@ -88,6 +111,7 @@ class CreaAnnuncioViewModel : ViewModel() {
         Nel testo inserisci sempre se si tratta di una di queste categorie: "suv", "sportiva", "berlina", "station", "wagon", "sw",
         "citycar", "utilitaria", "crossover", "cabrio", "coupe",
         "familiare", "monovolume"
+        
         Dati Auto:
         - Modello: ${datiAuto["titolo"]}
         - Anno: ${datiAuto["anno"]}

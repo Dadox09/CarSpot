@@ -591,7 +591,8 @@
                             android:hint="Cambio"
                             android:inputType="none"
                             android:textColor="@color/text_primary"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
