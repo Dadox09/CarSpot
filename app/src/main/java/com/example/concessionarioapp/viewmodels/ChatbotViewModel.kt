@@ -62,7 +62,41 @@ class ChatbotViewModel : ViewModel() {
             try {
                 val matchResult = findBestMatchingAnnuncio(userMessage)
 
-                val updatedMessages = buildApiMessages() + listOf(
+                // Crea solo messaggio di sistema + informazioni match
+                val systemMessage = Message(
+                    role = "system",
+                    content = """Sei un assistente virtuale professionale di un concessionario auto italiano. 
+                    Le tue caratteristiche:
+                    - Rispondi sempre in italiano
+                    - Sei cordiale, professionale e ONESTO
+                    - Aiuti i clienti con domande su auto, finanziamenti, assicurazioni, manutenzione
+                    - Mantieni le risposte concise ma informative (max 200 parole)
+                    - NO ELENCHI PUNTATI
+                    
+                    IMPORTANTE - Comportamento ONESTO per suggerimenti auto:
+                    
+                    MATCH PERFETTO: Se l'auto corrisponde esattamente alla richiesta, sii entusiasta:
+                    - "Perfetto! Ho trovato esattamente quello che cerchi!"
+                    - Concludi con "Ti mostro l'auto che abbiamo trovato!"
+                    
+                    MATCH BUONO: Se l'auto è simile ma non identica, sii onesto ma positivo:
+                    - "Non ho trovato esattamente quello che cercavi, ma ho questa interessante alternativa..."
+                    - Spiega le differenze e i punti di forza dell'alternativa
+                    
+                    MATCH SCARSO: Se l'auto è molto diversa, sii completamente onesto:
+                    - "Al momento non abbiamo quello che stai cercando, ma ho questa opzione disponibile..."
+                    - Spiega chiaramente le differenze
+                    - Suggerisci di contattare un consulente per altre opzioni
+                    
+                    NESSUN MATCH: Sii onesto e utile:
+                    - "Mi dispiace, al momento non abbiamo annunci che corrispondono alla tua ricerca"
+                    - Suggerisci di parlare con un consulente o di modificare i criteri
+                    
+                    NON mentire mai sulla corrispondenza tra richiesta e auto trovata!
+                """
+                )
+
+                val updatedMessages = listOf(systemMessage) + listOf(
                     Message(
                         role = "user",
                         content = when (matchResult.matchQuality) {
@@ -221,11 +255,9 @@ class ChatbotViewModel : ViewModel() {
             userWords.forEach { word ->
                 when {
                     // Parola nel titolo = punteggio alto
-                    titoloLower.contains(word) -> score += 15
+                    titoloLower.contains(word) -> score += 30
                     // Se è una categoria di auto e appare nella descrizione = punteggio alto
-                    carCategories.contains(word) && descrizioneText.contains(word) -> score += 12
-                    // Parola nella descrizione/altre info = punteggio basso
-                    descrizioneText.contains(word) -> score += 2
+                    carCategories.contains(word) && descrizioneText.contains(word) -> score += 25
                 }
             }
 
@@ -238,7 +270,7 @@ class ChatbotViewModel : ViewModel() {
                     if (kmValue != null) {
                         val actualKm = if (userLower.contains("mila")) (kmValue * 1000).toInt() else kmValue.toInt()
                         if (annuncio.chilometraggio <= actualKm) {
-                            score += 10
+                            score += 20
                         } else if (kotlin.math.abs(annuncio.chilometraggio - actualKm) <= 20000) {
                             score += 5
                         }
@@ -249,38 +281,33 @@ class ChatbotViewModel : ViewModel() {
             // LOGICA CARBURANTE
             fuelTypes.forEach { fuel ->
                 if (userLower.contains(fuel) && (titoloLower.contains(fuel) || descrizioneText.contains(fuel))) {
-                    score += 8
+                    score += 20
                 }
             }
 
-            // LOGICA ANNI
+            // LOGICA ANNI - con penalità per anni molto diversi
             val userYears = yearRegex.findAll(userLower).map { it.value.toInt() }.toList()
             userYears.forEach { year ->
-                if (annuncio.anno == year) {
-                    score += 12
-                } else if (kotlin.math.abs(annuncio.anno - year) <= 1) {
-                    score += 6
+                when {
+                    annuncio.anno == year -> score += 20  // Anno esatto
+                    kotlin.math.abs(annuncio.anno - year) <= 1 -> score += 6  // Anno vicino
+                    annuncio.anno > year -> score -= 5   // PENALITÀ per anni molto diversi
                 }
             }
 
-            // LOGICA PREZZO MIGLIORATA
+            // LOGICA PREZZO
             val priceMatches = priceRegex.findAll(userLower)
             priceMatches.forEach { match ->
                 val priceValue = match.groupValues[1].toDoubleOrNull()
                 if (priceValue != null) {
                     val actualPrice = if (userLower.contains("mila")) (priceValue * 1000) else priceValue
 
-                    // Controlla se l'utente vuole "meno di" o "sotto"
-                    val wantsLess = userLower.contains("meno di") || userLower.contains("sotto") ||
-                            userLower.contains("massimo") || userLower.contains("max")
-
-                    if (wantsLess && annuncio.prezzo <= actualPrice) {
-                        score += 12 // Bonus alto per prezzo che rispetta il limite
-                    } else if (!wantsLess && annuncio.prezzo <= actualPrice) {
-                        score += 8 // Bonus normale per prezzo compatibile
-                    } else if (!wantsLess && kotlin.math.abs(annuncio.prezzo - actualPrice) <= 2000) {
-                        score += 4 // Bonus per prezzo vicino
-                    }
+                        if (annuncio.prezzo <= actualPrice) {
+                            score += 20 // Bonus alto per prezzo che rispetta il limite
+                        } else {
+                            // L'auto supera il budget massimo
+                            score -= 4 // Applica una penalità
+                        }
                 }
             }
 
@@ -299,11 +326,9 @@ class ChatbotViewModel : ViewModel() {
 
         // Determina la qualità del match con soglie corrette
         val matchQuality = when {
-            bestScore == 0 -> MatchQuality.NONE
-            bestScore >= 25 -> MatchQuality.EXCELLENT  // Match perfetto con più criteri
-            bestScore >= 12 -> MatchQuality.EXCELLENT  // Match di una parola chiave nel titolo o categoria
-            bestScore >= 8 -> MatchQuality.GOOD        // Match decente
-            bestScore >= 5 -> MatchQuality.POOR        // Match scarso
+            bestScore >= 20 -> MatchQuality.EXCELLENT // Se almeno un criterio forte è soddisfatto
+            bestScore >= 10 -> MatchQuality.GOOD     // Se ci sono alcune corrispondenze minori
+            bestScore >= 5  -> MatchQuality.POOR
             else -> MatchQuality.NONE
         }
 
@@ -312,50 +337,6 @@ class ChatbotViewModel : ViewModel() {
 
     fun clearError() {
         _error.value = null
-    }
-
-    private fun buildApiMessages(): List<Message> {
-        val systemMessage = Message(
-            role = "system",
-            content = """Sei un assistente virtuale professionale di un concessionario auto italiano. 
-            Le tue caratteristiche:
-            - Rispondi sempre in italiano
-            - Sei cordiale, professionale e ONESTO
-            - Aiuti i clienti con domande su auto, finanziamenti, assicurazioni, manutenzione
-            - Mantieni le risposte concise ma informative (max 200 parole)
-            - NO ELENCHI PUNTATI
-            
-            IMPORTANTE - Comportamento ONESTO per suggerimenti auto:
-            
-            MATCH PERFETTO: Se l'auto corrisponde esattamente alla richiesta, sii entusiasta:
-            - "Perfetto! Ho trovato esattamente quello che cerchi!"
-            - Concludi con "Ti mostro l'auto che abbiamo trovato!"
-            
-            MATCH BUONO: Se l'auto è simile ma non identica, sii onesto ma positivo:
-            - "Non ho trovato esattamente quello che cercavi, ma ho questa interessante alternativa..."
-            - Spiega le differenze e i punti di forza dell'alternativa
-            
-            MATCH SCARSO: Se l'auto è molto diversa, sii completamente onesto:
-            - "Al momento non abbiamo quello che stai cercando, ma ho questa opzione disponibile..."
-            - Spiega chiaramente le differenze
-            - Suggerisci di contattare un consulente per altre opzioni
-            
-            NESSUN MATCH: Sii onesto e utile:
-            - "Mi dispiace, al momento non abbiamo annunci che corrispondono alla tua ricerca"
-            - Suggerisci di parlare con un consulente o di modificare i criteri
-            
-            NON mentire mai sulla corrispondenza tra richiesta e auto trovata!
-        """
-        )
-
-        val conversationMessages = conversationHistory.takeLast(8).map { chatMessage ->
-            Message(
-                role = if (chatMessage.isUser) "user" else "assistant",
-                content = chatMessage.content
-            )
-        }
-
-        return listOf(systemMessage) + conversationMessages
     }
 
     fun setAnnunci(annunci: List<Annuncio>) {
