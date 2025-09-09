@@ -223,7 +223,25 @@ class ChatbotViewModel : ViewModel() {
     private val fuelTypes = listOf("diesel", "benzina", "elettrica", "ibrida", "gasolio")
     private val kmWords = listOf("km", "chilometri", "chilometraggio")
     private val userKmRegex = Regex("""(\d+(?:\.\d+)?)\s*(?:mila\s*)?(?:k?m|chilometr[io])""")
-    private val yearRegex = Regex("""20\d{2}""")
+    private val yearRegex = Regex("""\b(20[0-2]\d)\b(?!\d)(?!\s*(?:euro|€|mila|km))""")
+    private fun extractValidYears(userMessage: String): List<Int> {
+        val userLower = userMessage.lowercase()
+
+        // Trova tutti i potenziali anni
+        val potentialYears = yearRegex.findAll(userLower)
+            .map { it.value.toInt() }
+            .filter { it in 1980..2030 } // Solo anni ragionevoli per auto
+            .toList()
+
+        // Filtra quelli che sono chiaramente parte di prezzi/km
+        return potentialYears.filter { year ->
+            val yearStr = year.toString()
+            // Controlla se l'anno è seguito da indicatori di prezzo/km
+            val isPriceOrKm = Regex("""${yearStr}\s*(?:euro|€|km|chilometr|mila)""")
+                .containsMatchIn(userLower)
+            !isPriceOrKm
+        }
+    }
     private val priceRegex = Regex("""(\d+(?:\.\d+)?)\s*(?:euro|€|mila\s*euro)""")
 
     // Categorie di auto che spesso appaiono nelle descrizioni
@@ -255,9 +273,9 @@ class ChatbotViewModel : ViewModel() {
             userWords.forEach { word ->
                 when {
                     // Parola nel titolo = punteggio alto
-                    titoloLower.contains(word) -> score += 30
+                    titoloLower.contains(word) -> score += 40
                     // Se è una categoria di auto e appare nella descrizione = punteggio alto
-                    carCategories.contains(word) && descrizioneText.contains(word) -> score += 25
+                    carCategories.contains(word) && descrizioneText.contains(word) -> score += 36
                 }
             }
 
@@ -270,7 +288,7 @@ class ChatbotViewModel : ViewModel() {
                     if (kmValue != null) {
                         val actualKm = if (userLower.contains("mila")) (kmValue * 1000).toInt() else kmValue.toInt()
                         if (annuncio.chilometraggio <= actualKm) {
-                            score += 20
+                            score += 30
                         } else if (kotlin.math.abs(annuncio.chilometraggio - actualKm) <= 20000) {
                             score += 5
                         }
@@ -281,17 +299,18 @@ class ChatbotViewModel : ViewModel() {
             // LOGICA CARBURANTE
             fuelTypes.forEach { fuel ->
                 if (userLower.contains(fuel) && (titoloLower.contains(fuel) || descrizioneText.contains(fuel))) {
-                    score += 20
+                    score += 30
                 }
             }
 
             // LOGICA ANNI - con penalità per anni molto diversi
-            val userYears = yearRegex.findAll(userLower).map { it.value.toInt() }.toList()
+            val userYears = extractValidYears(userMessage)
+            println("DEBUG - Anni validi trovati: $userYears")
             userYears.forEach { year ->
                 when {
-                    annuncio.anno == year -> score += 20  // Anno esatto
-                    kotlin.math.abs(annuncio.anno - year) <= 1 -> score += 6  // Anno vicino
-                    annuncio.anno > year -> score -= 5   // PENALITÀ per anni molto diversi
+                    annuncio.anno == year -> score += 30
+                    kotlin.math.abs(annuncio.anno - year) <= 1 -> score += 6
+                    annuncio.anno > year -> score -= 5
                 }
             }
 
@@ -302,12 +321,23 @@ class ChatbotViewModel : ViewModel() {
                 if (priceValue != null) {
                     val actualPrice = if (userLower.contains("mila")) (priceValue * 1000) else priceValue
 
-                        if (annuncio.prezzo <= actualPrice) {
-                            score += 20 // Bonus alto per prezzo che rispetta il limite
-                        } else {
-                            // L'auto supera il budget massimo
-                            score -= 4 // Applica una penalità
+                    if (annuncio.prezzo <= actualPrice) {
+                        score += 30 // Bonus alto per prezzo che rispetta il limite
+                    } else {
+                        // Calcola quanto supera il budget (in percentuale)
+                        val percentageOver = ((annuncio.prezzo - actualPrice) / actualPrice) * 100
+
+                        when {
+                            percentageOver <= 15 -> score -= 5
+                            percentageOver <= 40 -> score -= 15
+                            percentageOver <= 60 -> score -= 25
+                            else -> score -= 35                  // Supera di molto = penalità massima
                         }
+
+                        println("DEBUG - Prezzo annuncio: ${annuncio.prezzo}, Budget: $actualPrice")
+                        println("DEBUG - Supera budget del: ${percentageOver.toInt()}%")
+                        println("DEBUG - Penalità applicata: ${if (percentageOver <= 15) -5 else if (percentageOver <= 40) -15 else if (percentageOver <= 60) -25 else -35}")
+                    }
                 }
             }
 
@@ -324,11 +354,10 @@ class ChatbotViewModel : ViewModel() {
             println("DEBUG - Richiesta utente: $userMessage")
         }
 
-        // Determina la qualità del match con soglie corrette
         val matchQuality = when {
-            bestScore >= 20 -> MatchQuality.EXCELLENT // Se almeno un criterio forte è soddisfatto
-            bestScore >= 10 -> MatchQuality.GOOD     // Se ci sono alcune corrispondenze minori
-            bestScore >= 5  -> MatchQuality.POOR
+            bestScore >= 35 -> MatchQuality.EXCELLENT
+            bestScore >= 15 -> MatchQuality.GOOD
+            bestScore >= 8  -> MatchQuality.POOR
             else -> MatchQuality.NONE
         }
 
