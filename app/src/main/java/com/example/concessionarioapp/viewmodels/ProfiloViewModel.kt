@@ -74,7 +74,6 @@ class ProfiloViewModel : ViewModel() {
     }
 
     private fun loadAnnunciAttivi(userId: String) {
-        //solamente il numero per ora
         db.collection("annunci")
             .whereEqualTo("userId", userId)
             .get()

@@ -105,18 +105,15 @@ class DettaglioAnnuncioViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                // Get the ad data to find the image URL
                 val annuncioDoc = firestore.collection("annunci").document(annuncioId).get().await()
                 val annuncioData = annuncioDoc.toObject(Annuncio::class.java)
 
                 val imageUrls = annuncioData?.immagini ?: emptyList()
                 if (imageUrls.isNotEmpty()) {
-                    // Delete the first image from Firebase Storage
                     val imageUrl = imageUrls.first()
                     deleteImageFromStorage(imageUrl)
                 }
 
-                // Delete the Firestore document
                 firestore.collection("annunci").document(annuncioId).delete().await()
 
                 _deleteSuccess.value = true
@@ -137,8 +134,6 @@ class DettaglioAnnuncioViewModel : ViewModel() {
                 imageRef.delete().await()
                 Log.d("DettaglioAnnuncioViewModel", "Immagine eliminata con successo: $imageUrl")
             } catch (e: Exception) {
-                // Log the error but don't re-throw it.
-                // We want to continue and delete the ad from Firestore even if the image delete fails.
                 Log.e("DettaglioAnnuncioViewModel", "Errore durante l'eliminazione dell'immagine: $imageUrl", e)
             }
         }

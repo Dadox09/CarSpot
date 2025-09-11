@@ -81,11 +81,11 @@ class ChatbotViewModel : ViewModel() {
                     
                     MATCH BUONO: Se l'auto è simile ma non identica, sii onesto ma positivo:
                     - "Non ho trovato esattamente quello che cercavi, ma ho questa interessante alternativa..."
-                    - Spiega le differenze e i punti di forza dell'alternativa
+                    - Spiega sempre le differenze e i punti di forza dell'alternativa
                     
                     MATCH SCARSO: Se l'auto è molto diversa, sii completamente onesto:
                     - "Al momento non abbiamo quello che stai cercando, ma ho questa opzione disponibile..."
-                    - Spiega chiaramente le differenze
+                    - Spiega sempre e chiaramente le differenze
                     - Suggerisci di contattare un consulente per altre opzioni
                     
                     NESSUN MATCH: Sii onesto e utile:
@@ -112,7 +112,12 @@ class ChatbotViewModel : ViewModel() {
                                 Potenza: ${matchResult.annuncio.cv} CV
                                 Prezzo: €${matchResult.annuncio.prezzo}
                                 
-                                Presenta questa auto in modo entusiasta perché corrisponde perfettamente alla richiesta.
+                                Presenta questa auto in modo entusiasta se corrisponde perfettamente alla richiesta.
+                                
+                                SE TI ARRIVA UN ANNUNCIO CHE PRESENTA DEGLI ELEMENTI NON CONFORMI ALLA RICHIESTA DELL'UTENTE MA TI É ARRIVATO ANALIZZA LE DIFFERENZE E 
+                                SPIEGA PER BENE PERCHE LA STAI PRESENTANDO COMUNQUE.
+                                
+                                RICORDA CHE OGNI AUTO CHE RICEVI TU LA PRESENTERAI IN UN MODO O NELL'ALTRO
                                 
                                 Messaggio originale dell'utente: "$userMessage"
                                 """
@@ -129,7 +134,7 @@ class ChatbotViewModel : ViewModel() {
                                 Potenza: ${matchResult.annuncio.cv} CV
                                 Prezzo: €${matchResult.annuncio.prezzo}
                                 
-                                Spiega chiaramente che non è esattamente quello che cercava, ma proponi questa alternativa valida.
+                                Spiega sempre e chiaramente che non è esattamente quello che cercava, ma proponi questa alternativa valida.
                                 
                                 Messaggio originale dell'utente: "$userMessage"
                                 """
@@ -250,6 +255,7 @@ class ChatbotViewModel : ViewModel() {
         "familiare", "monovolume", "pickup")
 
     private fun findBestMatchingAnnuncio(userMessage: String): MatchResult {
+
         if (availableAnnunci.isEmpty()) {
             return MatchResult(null, MatchQuality.NONE, 0)
         }
@@ -288,9 +294,7 @@ class ChatbotViewModel : ViewModel() {
                     if (kmValue != null) {
                         val actualKm = if (userLower.contains("mila")) (kmValue * 1000).toInt() else kmValue.toInt()
                         if (annuncio.chilometraggio <= actualKm) {
-                            score += 30
-                        } else if (kotlin.math.abs(annuncio.chilometraggio - actualKm) <= 20000) {
-                            score += 5
+                                score += 35
                         }
                     }
                 }
@@ -299,7 +303,7 @@ class ChatbotViewModel : ViewModel() {
             // LOGICA CARBURANTE
             fuelTypes.forEach { fuel ->
                 if (userLower.contains(fuel) && (titoloLower.contains(fuel) || descrizioneText.contains(fuel))) {
-                    score += 30
+                        score += 35
                 }
             }
 
@@ -308,7 +312,7 @@ class ChatbotViewModel : ViewModel() {
             println("DEBUG - Anni validi trovati: $userYears")
             userYears.forEach { year ->
                 when {
-                    annuncio.anno == year -> score += 30
+                    annuncio.anno == year -> score += 35
                     kotlin.math.abs(annuncio.anno - year) <= 1 -> score += 6
                     annuncio.anno > year -> score -= 5
                 }
@@ -322,16 +326,16 @@ class ChatbotViewModel : ViewModel() {
                     val actualPrice = if (userLower.contains("mila")) (priceValue * 1000) else priceValue
 
                     if (annuncio.prezzo <= actualPrice) {
-                        score += 30 // Bonus alto per prezzo che rispetta il limite
+                        score += 35
                     } else {
                         // Calcola quanto supera il budget (in percentuale)
                         val percentageOver = ((annuncio.prezzo - actualPrice) / actualPrice) * 100
 
                         when {
-                            percentageOver <= 15 -> score -= 5
-                            percentageOver <= 40 -> score -= 15
-                            percentageOver <= 60 -> score -= 25
-                            else -> score -= 35                  // Supera di molto = penalità massima
+                            percentageOver <= 150-> score -= 5
+                            percentageOver <= 200 -> score -= 10
+                            percentageOver <= 300 -> score -= 15
+                            else -> score -= 25               // Supera di molto = penalità massima
                         }
 
                         println("DEBUG - Prezzo annuncio: ${annuncio.prezzo}, Budget: $actualPrice")

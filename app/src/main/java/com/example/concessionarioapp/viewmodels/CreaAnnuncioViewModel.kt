@@ -7,9 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.concessionarioapp.network.AIRequest
 import com.example.concessionarioapp.network.Message
 import com.example.concessionarioapp.network.RetrofitClient
-import com.google.gson.Gson
 import android.util.Log
-import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
 
 class CreaAnnuncioViewModel : ViewModel() {
