@@ -73,7 +73,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.firebaseui:firebase-ui-auth:9.0.0")
+    implementation("com.firebaseui:firebase-ui-auth:8.0.2")
 
     // Retrofit per OpenAI
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

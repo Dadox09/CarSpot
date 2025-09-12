@@ -310,11 +310,23 @@ class ChatbotViewModel : ViewModel() {
             // LOGICA ANNI - con penalità per anni molto diversi
             val userYears = extractValidYears(userMessage)
             println("DEBUG - Anni validi trovati: $userYears")
+
             userYears.forEach { year ->
+                val yearDifference = kotlin.math.abs(annuncio.anno - year)
+
                 when {
-                    annuncio.anno == year -> score += 35
-                    kotlin.math.abs(annuncio.anno - year) <= 1 -> score += 6
-                    annuncio.anno > year -> score -= 5
+                    annuncio.anno == year -> score += 40  // Match perfetto
+                    yearDifference == 1 -> score += 35    // Differenza di 1 anno
+                    yearDifference == 2 -> score += 30    // Differenza di 2 anni
+                    yearDifference == 3 -> score += 25    // Differenza di 3 anni
+                    yearDifference <= 5 -> score += 20    // Differenza fino a 5 anni
+                    yearDifference <= 10 -> score += 10   // Differenza fino a 10 anni
+                    // Differenze maggiori non danno punteggio
+                }
+
+                // Bonus se l'auto è più nuova di quanto richiesto
+                if (annuncio.anno > year) {
+                    score += 5
                 }
             }
 
