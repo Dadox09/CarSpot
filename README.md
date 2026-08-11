@@ -22,10 +22,6 @@ An Android marketplace for buying and selling cars, with an AI-powered assistant
 | Images | Glide |
 | UI | Material Design 3, Jetpack Navigation |
 
-## Screenshots
-
-> Coming soon
-
 ## Getting Started
 
 1. Clone the repo
@@ -35,6 +31,6 @@ An Android marketplace for buying and selling cars, with an AI-powered assistant
 
 ## Author
 
-**Davide Rizzo** — Computer Engineer, MSc candidate in AI & Human-Centered Computing @ Università di Genova.
+**Davide Rizzo** — Computer Engineer
 
 [Portfolio](https://daviderizzo.dev) · [GitHub](https://github.com/Dadox09) · [LinkedIn](https://www.linkedin.com/in/davide-rizzo-a85264256/)
